@@ -7,28 +7,33 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  passwordHash  String    @map("password_hash")
-  name          String
-  avatarUrl     String?   @map("avatar_url")
-  language      String    @default("en")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at")
-  trips         Trip[]
-  savedCities   SavedDestination[]
+  id           String             @id @default(uuid())
+  email        String             @unique
+  passwordHash String             @map("password_hash")
+  firstName    String?            @map("first_name")
+  lastName     String?            @map("last_name")
+  phoneNumber  String?            @map("phone_number")
+  city         String?            @map("city")
+  country      String?            @map("country")
+  additionalInfo String?          @map("additional_info")
+  avatarUrl    String?            @map("avatar_url")
+  language     String             @default("en")
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @default(now()) @updatedAt @map("updated_at")
+  trips        Trip[]
+  savedCities  SavedDestination[]
 
   @@map("users")
 }
 
 model City {
-  id              String    @id @default(uuid())
+  id              String             @id @default(uuid())
   name            String
   country         String
   region          String?
-  costIndex       Decimal?  @map("cost_index") @db.Decimal(5, 2)
-  popularityScore Int       @default(0) @map("popularity_score")
-  coverPhotoUrl   String?   @map("cover_photo_url")
+  costIndex       Decimal?           @map("cost_index") @db.Decimal(5, 2)
+  popularityScore Int                @default(0) @map("popularity_score")
+  coverPhotoUrl   String?            @map("cover_photo_url")
   stops           Stop[]
   activities      Activity[]
   savedByUsers    SavedDestination[]
@@ -37,18 +42,18 @@ model City {
 }
 
 model Trip {
-  id            String    @id @default(uuid())
-  userId        String    @map("user_id")
+  id            String        @id @default(uuid())
+  userId        String        @map("user_id")
   title         String
   description   String?
-  coverPhotoUrl String?   @map("cover_photo_url")
-  startDate     DateTime? @map("start_date") @db.Date
-  endDate       DateTime? @map("end_date") @db.Date
-  budgetLimit   Decimal?  @map("budget_limit") @db.Decimal(10, 2)
-  shareToken    String?   @unique @map("share_token")
-  isPublic      Boolean   @default(false) @map("is_public")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coverPhotoUrl String?       @map("cover_photo_url")
+  startDate     DateTime?     @map("start_date") @db.Date
+  endDate       DateTime?     @map("end_date") @db.Date
+  budgetLimit   Decimal?      @map("budget_limit") @db.Decimal(10, 2)
+  shareToken    String?       @unique @map("share_token")
+  isPublic      Boolean       @default(false) @map("is_public")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   stops         Stop[]
   packingItems  PackingItem[]
   notes         Note[]
@@ -58,15 +63,15 @@ model Trip {
 }
 
 model Stop {
-  id             String    @id @default(uuid())
-  tripId         String    @map("trip_id")
-  cityId         String    @map("city_id")
-  sortOrder      Int       @map("sort_order")
-  arriveDate     DateTime? @map("arrive_date") @db.Date
-  departDate     DateTime? @map("depart_date") @db.Date
-  createdAt      DateTime  @default(now()) @map("created_at")
-  trip           Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  city           City      @relation(fields: [cityId], references: [id])
+  id             String         @id @default(uuid())
+  tripId         String         @map("trip_id")
+  cityId         String         @map("city_id")
+  sortOrder      Int            @map("sort_order")
+  arriveDate     DateTime?      @map("arrive_date") @db.Date
+  departDate     DateTime?      @map("depart_date") @db.Date
+  createdAt      DateTime       @default(now()) @map("created_at")
+  trip           Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  city           City           @relation(fields: [cityId], references: [id])
   stopActivities StopActivity[]
   notes          Note[]
   budgetEntries  BudgetEntry[]
@@ -76,15 +81,15 @@ model Stop {
 }
 
 model Activity {
-  id              String    @id @default(uuid())
-  cityId          String    @map("city_id")
+  id              String         @id @default(uuid())
+  cityId          String         @map("city_id")
   name            String
   description     String?
   category        String?
-  baseCost        Decimal?  @map("base_cost") @db.Decimal(8, 2)
-  durationMinutes Int?      @map("duration_minutes")
-  imageUrl        String?   @map("image_url")
-  city            City      @relation(fields: [cityId], references: [id])
+  baseCost        Decimal?       @map("base_cost") @db.Decimal(8, 2)
+  durationMinutes Int?           @map("duration_minutes")
+  imageUrl        String?        @map("image_url")
+  city            City           @relation(fields: [cityId], references: [id])
   stopActivities  StopActivity[]
 
   @@map("activities")
