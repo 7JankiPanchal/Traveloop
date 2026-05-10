@@ -8,10 +8,11 @@ export async function searchCities(query: string): Promise<CityResult[]> {
   if (!query || query.trim().length < 2) return []
 
   try {
-    const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query.trim())}&format=json&limit=8`
+    const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query.trim())}&format=json&limit=8&accept-language=en`
     const res = await fetch(url, {
       headers: {
         'User-Agent': 'Traveloop-App (development)',
+        'Accept-Language': 'en',
       },
       next: { revalidate: 3600 }, // cache city search results for 1 hour
     })

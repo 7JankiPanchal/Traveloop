@@ -23,7 +23,7 @@ export default function LoginPage() {
       })
       const data = await res.json()
       if (res.ok) {
-        router.push('/dashboard')
+        router.push('/trips')
       } else {
         setError(data.error || 'Login failed')
       }
