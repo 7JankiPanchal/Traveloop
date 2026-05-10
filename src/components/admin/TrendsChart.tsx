@@ -8,9 +8,9 @@ interface TrendsChartProps {
 
 export function TrendsChart({ data }: TrendsChartProps) {
   return (
-    <div className="p-8 bg-white/5 border border-white/10 rounded-[40px] backdrop-blur-xl h-[400px]">
-      <h2 className="text-xl font-bold mb-8 flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+    <div className="p-10 bg-white border border-[#E8E1D9] rounded-[48px] shadow-sm h-[450px]">
+      <h2 className="text-2xl font-black mb-10 flex items-center gap-3 tracking-tighter">
+        <span className="w-2 h-2 rounded-full bg-[#A43716]"></span>
         Journey Trends
       </h2>
 
@@ -19,37 +19,39 @@ export function TrendsChart({ data }: TrendsChartProps) {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorTrips" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#A43716" stopOpacity={0.15}/>
+                <stop offset="95%" stopColor="#A43716" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff05" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E8E1D9" />
             <XAxis 
               dataKey="name" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#64748b', fontSize: 12 }} 
-              dy={10}
+              tick={{ fill: '#8C7B72', fontSize: 12, fontWeight: 600 }} 
+              dy={15}
             />
             <YAxis 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#64748b', fontSize: 12 }}
+              tick={{ fill: '#8C7B72', fontSize: 12, fontWeight: 600 }}
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: '#1a1a1c', 
-                border: '1px solid #ffffff10', 
-                borderRadius: '16px',
-                fontSize: '12px'
+                backgroundColor: '#FFFFFF', 
+                border: '1px solid #E8E1D9', 
+                borderRadius: '24px',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)'
               }}
-              itemStyle={{ color: '#f97316' }}
+              itemStyle={{ color: '#A43716' }}
             />
             <Area 
               type="monotone" 
               dataKey="trips" 
-              stroke="#f97316" 
-              strokeWidth={3}
+              stroke="#A43716" 
+              strokeWidth={4}
               fillOpacity={1} 
               fill="url(#colorTrips)" 
             />

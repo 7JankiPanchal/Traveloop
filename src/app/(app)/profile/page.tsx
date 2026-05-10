@@ -24,14 +24,14 @@ export default async function ProfilePage() {
     <div className="max-w-4xl mx-auto space-y-12 pb-20">
       {/* Header */}
       <div className="relative">
-        <div className="h-48 w-full bg-gradient-to-r from-orange-500/20 to-blue-500/20 rounded-3xl border border-white/5" />
+        <div className="h-48 w-full bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-3xl border border-outline-variant" />
         <div className="absolute -bottom-12 left-8 flex items-end gap-6">
           <div className="relative group">
-            <div className="w-32 h-32 rounded-3xl border-4 border-[#0f1117] overflow-hidden bg-white/5 backdrop-blur-xl">
+            <div className="w-32 h-32 rounded-3xl border-4 border-background overflow-hidden bg-surface-container-high shadow-xl">
               {profile.avatarUrl ? (
                 <img src={profile.avatarUrl as string} alt={profile.firstName ?? 'User'} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-4xl font-black text-white/20">
+                <div className="w-full h-full flex items-center justify-center text-4xl font-black text-on-surface/10">
                   {profile.firstName?.[0]}
                 </div>
               )}
@@ -41,10 +41,10 @@ export default async function ProfilePage() {
             </button>
           </div>
           <div className="pb-4">
-            <h1 className="text-4xl font-black tracking-tighter text-white">
+            <h1 className="text-4xl font-black tracking-tighter text-on-surface">
               {profile.firstName || 'Traveler'} {profile.lastName || ''}
             </h1>
-            <p className="text-slate-400 font-medium">Explorer since {new Date(profile.createdAt).getFullYear()}</p>
+            <p className="text-on-surface-variant font-medium">Explorer since {new Date(profile.createdAt).getFullYear()}</p>
           </div>
         </div>
       </div>
@@ -52,28 +52,28 @@ export default async function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
         {/* Contact Info */}
         <div className="md:col-span-1 space-y-6">
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-6 space-y-6">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <User className="w-5 h-5 text-orange-500" />
+          <div className="bg-surface-container border border-outline-variant rounded-3xl p-6 space-y-6">
+            <h3 className="text-lg font-bold text-on-surface flex items-center gap-2">
+              <User className="w-5 h-5 text-primary" />
               About Me
             </h3>
             
             <div className="space-y-4">
-              <div className="flex items-center gap-3 text-slate-400">
+              <div className="flex items-center gap-3 text-on-surface-variant">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm">{profile.email}</span>
               </div>
               {profile.phoneNumber && (
-                <div className="flex items-center gap-3 text-slate-400">
+                <div className="flex items-center gap-3 text-on-surface-variant">
                   <Phone className="w-4 h-4" />
                   <span className="text-sm">{profile.phoneNumber}</span>
                 </div>
               )}
-              <div className="flex items-center gap-3 text-slate-400">
+              <div className="flex items-center gap-3 text-on-surface-variant">
                 <MapPin className="w-4 h-4" />
                 <span className="text-sm">{profile.city || 'Location not set'}, {profile.country || 'Earth'}</span>
               </div>
-              <div className="flex items-center gap-3 text-slate-400">
+              <div className="flex items-center gap-3 text-on-surface-variant">
                 <Globe className="w-4 h-4" />
                 <span className="text-sm">{profile.language === 'en' ? 'English' : profile.language}</span>
               </div>
@@ -83,21 +83,21 @@ export default async function ProfilePage() {
 
         {/* Main Content */}
         <div className="md:col-span-2 space-y-8">
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-8 space-y-6">
-            <h3 className="text-xl font-bold text-white">Bio</h3>
-            <p className="text-slate-400 leading-relaxed">
+          <div className="bg-surface-container border border-outline-variant rounded-3xl p-8 space-y-6">
+            <h3 className="text-xl font-bold text-on-surface">Bio</h3>
+            <p className="text-on-surface-variant leading-relaxed">
               {profile.additionalInfo || "No bio added yet. Tell us about your travel philosophy!"}
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 text-center">
-              <div className="text-3xl font-black text-white mb-1">0</div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Countries</div>
+            <div className="bg-surface-container border border-outline-variant rounded-3xl p-6 text-center">
+              <div className="text-3xl font-black text-on-surface mb-1">0</div>
+              <div className="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest">Countries</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 text-center">
-              <div className="text-3xl font-black text-white mb-1">0</div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Adventures</div>
+            <div className="bg-surface-container border border-outline-variant rounded-3xl p-6 text-center">
+              <div className="text-3xl font-black text-on-surface mb-1">0</div>
+              <div className="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest">Adventures</div>
             </div>
           </div>
         </div>

@@ -9,7 +9,22 @@ interface TripHeroProps {
 }
 
 export function TripHero({ trip }: TripHeroProps) {
-  const coverImage = trip.coverPhotoUrl || `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop`
+  // Determine search query for dynamic image
+  const destinationQuery = trip.title || (trip.stops && trip.stops[0]?.city?.name) || 'travel'
+  
+  // Use a dynamic Unsplash search URL that works without API key for display
+  const dynamicCover = trip.coverPhotoUrl || `https://images.unsplash.com/photo-1506461883276-594a12b11cf3?q=80&w=2070&auto=format&fit=crop` 
+  
+  // Actually, to truly match the country, we can use keywords
+  const countryImageMap: Record<string, string> = {
+    'India': 'https://images.unsplash.com/photo-1524492707947-2f85a514d735?q=80&w=2071&auto=format&fit=crop',
+    'Japan': 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop',
+    'France': 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073&auto=format&fit=crop',
+    'Italy': 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=2070&auto=format&fit=crop',
+    'Greece': 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=2021&auto=format&fit=crop'
+  }
+
+  const coverImage = trip.coverPhotoUrl || countryImageMap[trip.title] || countryImageMap[trip.stops?.[0]?.city?.name] || dynamicCover
 
   return (
     <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">

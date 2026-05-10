@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { CitySearchInput } from '@/components/city-search/CitySearchInput'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Badge } from '@/components/ui/Badge'
@@ -18,6 +19,17 @@ interface SearchClientProps {
 }
 
 export function SearchClient({ trips }: SearchClientProps) {
+  return (
+    <Suspense fallback={<div>Loading search...</div>}>
+      <SearchContent trips={trips} />
+    </Suspense>
+  )
+}
+
+function SearchContent({ trips }: SearchClientProps) {
+  const searchParams = useSearchParams()
+  const initialQuery = searchParams.get('q') || ''
+  
   const [selectedCity, setSelectedCity] = useState<CityResult | null>(null)
   const [selectedTripId, setSelectedTripId] = useState<string>('')
   const [showAddStopDialog, setShowAddStopDialog] = useState(false)
@@ -37,6 +49,7 @@ export function SearchClient({ trips }: SearchClientProps) {
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">City Search</h2>
         <CitySearchInput
+          initialQuery={initialQuery}
           onSelect={(city) => {
             setSelectedCity(city)
             setShowAddStopDialog(false) // reset dialog state when city changes

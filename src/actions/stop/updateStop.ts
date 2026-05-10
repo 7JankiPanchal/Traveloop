@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma'
 import { requireUser } from '@/lib/auth/getCurrentUser'
 import { updateStopSchema } from '@/lib/validations/stopSchema'
 import type { UpdateStopInput } from '@/lib/validations/stopSchema'
+import { serialize } from '@/lib/utils'
 
 export async function updateStop(tripId: string, input: UpdateStopInput) {
   const user = await requireUser()
@@ -16,7 +17,7 @@ export async function updateStop(tripId: string, input: UpdateStopInput) {
   const { id, ...rest } = data
 
   const stop = await prisma.stop.update({
-    where: { id, tripId },
+    where: { id },
     data: {
       ...( rest.cityName && { cityName: rest.cityName }),
       ...( rest.country !== undefined && { country: rest.country }),
@@ -35,5 +36,5 @@ export async function updateStop(tripId: string, input: UpdateStopInput) {
 
   revalidatePath(`/trips/${tripId}/builder`)
   revalidatePath(`/trips/${tripId}/view`)
-  return stop
+  return serialize(stop)
 }

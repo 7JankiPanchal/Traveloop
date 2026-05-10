@@ -4,6 +4,8 @@ import { serialize } from '@/lib/utils'
 import { NoteEditor } from '@/components/notes/NoteEditor'
 import { NoteCard } from '@/components/notes/NoteCard'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { TripTabs } from '@/components/trips/TripTabs'
+import Link from 'next/link'
 import { StickyNote, Filter } from 'lucide-react'
 
 export default async function TripNotesPage({ 
@@ -37,23 +39,28 @@ export default async function TripNotesPage({
   const stops = serialize(trip.stops)
 
   return (
-    <div className="space-y-10 pb-20">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-orange-500/10 rounded-xl">
-              <StickyNote className="w-6 h-6 text-orange-500" />
+    <div className="space-y-8 pb-20">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-primary/10 rounded-xl">
+                <StickyNote className="w-6 h-6 text-primary" />
+              </div>
+              <h1 className="text-3xl font-bold text-on-surface tracking-tight">Trip Journal</h1>
             </div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Trip Journal</h1>
+            <p className="text-on-surface-variant max-w-lg">
+              Record memories, travel tips, and important details for your journey to <span className="text-primary font-bold">{trip.title}</span>.
+            </p>
           </div>
-          <p className="text-slate-400 max-w-lg">
-            Record memories, travel tips, and important details for your journey to <span className="text-white font-medium">{trip.title}</span>.
-          </p>
         </div>
+
+        <TripTabs tripId={tripId} />
       </div>
 
-      <NoteEditor tripId={tripId} stops={stops} />
+      <div className="pt-2">
+        <NoteEditor tripId={tripId} stops={stops} />
+      </div>
 
       {notes.length === 0 ? (
         <EmptyState
@@ -63,7 +70,7 @@ export default async function TripNotesPage({
         />
       ) : (
         <div className="space-y-6">
-          <div className="flex items-center gap-2 text-slate-500 mb-2">
+          <div className="flex items-center gap-2 text-on-surface-variant mb-2">
             <Filter className="w-4 h-4" />
             <span className="text-sm font-medium uppercase tracking-widest">Recent Entries</span>
           </div>
@@ -78,3 +85,4 @@ export default async function TripNotesPage({
     </div>
   )
 }
+

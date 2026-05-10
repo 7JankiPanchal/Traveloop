@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'motion/react'
 import { 
   Home, 
@@ -14,7 +15,9 @@ import {
   LogOut,
   Menu,
   X,
-  Compass
+  Compass,
+  Heart,
+  Calendar
 } from 'lucide-react'
 import { LogoutButton } from '@/components/auth/LogoutButton'
 
@@ -40,14 +43,15 @@ export function Navbar({ user }: NavbarProps) {
   }, [])
 
   const mainNavItems = [
-    { label: 'Home', href: '/', icon: Home },
-    { label: 'My Trips', href: '/trips', icon: Compass },
-    { label: 'Discover', href: '/search', icon: Search },
+    { label: 'Explore', href: '/', icon: Compass },
+    { label: 'Bookings', href: '/trips', icon: Calendar },
+    { label: 'Saved', href: '/saved', icon: Heart },
+    { label: 'Profile', href: '/profile', icon: UserIcon },
   ]
 
   const tripNavItems = tripId ? [
-    { label: 'Overview', href: `/trips/${tripId}`, icon: Map },
-    { label: 'Itinerary', href: `/trips/${tripId}/itinerary`, icon: Map },
+    { label: 'View', href: `/trips/${tripId}/view`, icon: Map },
+    { label: 'Builder', href: `/trips/${tripId}/builder`, icon: Map },
     { label: 'Packing', href: `/trips/${tripId}/packing`, icon: Luggage },
     { label: 'Journal', href: `/trips/${tripId}/notes`, icon: StickyNote },
     { label: 'Budget', href: `/trips/${tripId}/budget`, icon: Wallet },
@@ -55,105 +59,63 @@ export function Navbar({ user }: NavbarProps) {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
         isScrolled 
-          ? 'py-3 bg-surface-bright/80 backdrop-blur-2xl border-b border-outline-variant shadow-2xl' 
-          : 'py-6 bg-transparent'
+          ? 'py-3 bg-surface-bright/90 backdrop-blur-2xl border-b border-outline-variant shadow-lg' 
+          : 'py-5 bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-12">
-            <a href="/" className="group flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
-                <Compass className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-black tracking-tighter text-on-surface">Traveloop</span>
-            </a>
+          {/* Menu Icon - Left */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 text-on-surface hover:text-primary transition-colors focus:outline-none"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
 
-            {/* Main Nav - Desktop */}
-            <div className="hidden lg:flex items-center gap-1">
-              {mainNavItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                    pathname === item.href 
-                      ? 'text-on-surface bg-surface-container' 
-                      : 'text-on-surface-variant hover:text-primary hover:bg-surface-container'
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </div>
+          {/* Logo - Center */}
+          <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+            <h1 className="text-3xl font-display font-bold tracking-tighter text-primary uppercase">Traveloop</h1>
+          </Link>
 
-          {/* Context Nav - Trip Specific (Desktop) */}
-          {tripId && (
-            <div className="hidden lg:flex items-center gap-1 bg-surface-container border border-outline p-1 rounded-2xl backdrop-blur-md">
-              {tripNavItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                    pathname === item.href 
-                      ? 'text-primary bg-primary/10' 
-                      : 'text-on-surface-variant hover:text-primary hover:bg-surface-container'
-                  }`}
-                >
-                  <item.icon className="w-3.5 h-3.5" />
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          )}
-
-          {/* User Actions */}
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-4">
-                <a 
-                  href="/profile" 
-                  className={`flex items-center gap-3 p-1 pr-4 rounded-full border transition-all ${
-                    pathname === '/profile'
-                      ? 'border-primary/50 bg-primary/10'
-                      : 'border-outline bg-surface-container hover:border-primary/50'
-                  }`}
-                >
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container border border-outline">
-                    {user.avatarUrl ? (
-                      <img src={user.avatarUrl} alt={user.firstName} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs font-bold text-outline">
-                        {user.firstName?.[0]}
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-sm font-bold text-on-surface hidden sm:block">{user.firstName}</span>
-                </a>
-                <div className="hidden sm:block">
-                  <LogoutButton />
-                </div>
-              </div>
-            ) : (
-              <a href="/login" className="px-6 py-2 bg-primary text-white font-bold rounded-xl hover:scale-105 active:scale-95 transition-all">
-                Sign In
-              </a>
-            )}
-
-            {/* Mobile Menu Toggle */}
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-on-surface-variant hover:text-primary transition-colors"
-            >
-              {isMobileMenuOpen ? <X /> : <Menu />}
-            </button>
-          </div>
+          {/* Search Icon - Right */}
+          <Link href="/search" className="p-2 text-on-surface hover:text-primary transition-colors">
+            <Search className="w-6 h-6" />
+          </Link>
         </div>
       </nav>
 
+
       {/* Spacer to prevent content from jumping under fixed nav */}
       <div className="h-24" />
+
+      {/* Mobile Bottom Navigation - Visible on mobile only */}
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-md z-[100]">
+        <div className="bg-white/90 backdrop-blur-2xl border border-outline-variant rounded-full px-2 py-2 flex items-center justify-between shadow-2xl">
+          {[
+            { icon: Compass, label: 'Explore', href: '/' },
+            { icon: Calendar, label: 'Bookings', href: '/trips' },
+            { icon: Heart, label: 'Saved', href: '/saved' },
+            { icon: UserIcon, label: 'Profile', href: '/profile' },
+          ].map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <Link 
+                key={item.label} 
+                href={item.href}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-500 ${
+                  isActive 
+                    ? 'bg-primary text-white shadow-lg shadow-primary/30' 
+                    : 'text-on-surface-variant hover:bg-surface-container'
+                }`}
+              >
+                <item.icon className={`w-5 h-5 ${isActive ? 'fill-white' : ''}`} />
+                {isActive && <span className="text-xs font-black uppercase tracking-wider">{item.label}</span>}
+              </Link>
+            )
+          })}
+        </div>
+      </div>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
@@ -166,36 +128,44 @@ export function Navbar({ user }: NavbarProps) {
           >
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-outline px-4">Menu</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 px-4">Menu</p>
                 <div className="flex flex-col gap-2">
                   {mainNavItems.map((item) => (
-                    <a
+                    <Link
                       key={item.label}
                       href={item.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-surface-container border border-outline-variant text-lg font-bold text-on-surface"
+                      className={`flex items-center gap-4 px-4 py-4 rounded-2xl border transition-all ${
+                        pathname === item.href 
+                          ? 'bg-primary/5 border-primary/20 text-primary'
+                          : 'bg-surface-container border-outline-variant text-on-surface'
+                      }`}
                     >
-                      <item.icon className="w-5 h-5 text-primary" />
+                      <item.icon className={`w-5 h-5 ${pathname === item.href ? 'text-primary' : 'text-on-surface-variant'}`} />
                       {item.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
 
               {tripId && (
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-outline px-4">Current Trip</p>
+                <div className="space-y-4 pb-20">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 px-4">Current Trip</p>
                   <div className="flex flex-col gap-2">
                     {tripNavItems.map((item) => (
-                      <a
+                      <Link
                         key={item.label}
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-surface-container border border-outline-variant text-lg font-bold text-on-surface"
+                        className={`flex items-center gap-4 px-4 py-4 rounded-2xl border transition-all ${
+                          pathname === item.href 
+                            ? 'bg-primary/5 border-primary/20 text-primary'
+                            : 'bg-surface-container border-outline-variant text-on-surface'
+                        }`}
                       >
-                        <item.icon className="w-5 h-5 text-primary" />
+                        <item.icon className={`w-5 h-5 ${pathname === item.href ? 'text-primary' : 'text-on-surface-variant'}`} />
                         {item.label}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>

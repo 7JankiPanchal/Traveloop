@@ -17,7 +17,7 @@ export async function deleteActivity(
   if (!stop) throw new Error('Stop not found or access denied')
 
   // Delete StopActivity junction (cascade removes the link; activity record persists)
-  await prisma.stopActivity.delete({ where: { id: stopActivityId, stopId } })
+  await prisma.stopActivity.delete({ where: { id: stopActivityId } })
 
   revalidatePath(`/trips/${tripId}/builder`)
   revalidatePath(`/trips/${tripId}/view`)

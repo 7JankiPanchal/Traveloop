@@ -52,26 +52,28 @@ export default async function AdminDashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b] text-white p-8">
-      <div className="max-w-7xl mx-auto space-y-10">
+    <div className="min-h-screen bg-[#FDF9F4] text-[#1C1C19] p-8 md:p-12">
+      <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <LayoutDashboard className="w-8 h-8 text-blue-500" />
-              <h1 className="text-4xl font-bold tracking-tight">Platform Insights</h1>
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <LayoutDashboard className="w-6 h-6 text-primary" />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-on-surface">Platform Insights</h1>
             </div>
-            <p className="text-slate-400">Comprehensive overview of Traveloop platform metrics and user activity.</p>
+            <p className="text-on-surface-variant text-lg font-medium">Comprehensive overview of Traveloop platform metrics and user activity.</p>
           </div>
           
-          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Live System Status</span>
+          <div className="flex items-center gap-3 px-6 py-3 bg-white border border-[#E8E1D9] rounded-[24px] shadow-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Live System Status</span>
           </div>
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <StatCard title="Total Explorers" value={totalUsers} icon={<Users />} color="blue" />
           <StatCard title="Planned Journeys" value={totalTrips} icon={<Plane />} color="orange" />
           <StatCard title="Destinations" value={totalCities} icon={<Map />} color="green" />
@@ -79,7 +81,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Trends Chart */}
           <div className="lg:col-span-2">
             <TrendsChart data={trendData} />

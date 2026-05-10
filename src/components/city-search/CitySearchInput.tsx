@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useCitySearch } from '@/hooks/useCitySearch'
 import { EmptyState } from '@/components/ui/EmptyState'
 import type { CityResult } from '@/types/city'
@@ -8,11 +8,21 @@ import type { CityResult } from '@/types/city'
 interface CitySearchInputProps {
   onSelect: (city: CityResult) => void
   placeholder?: string
+  initialQuery?: string
 }
 
-export function CitySearchInput({ onSelect, placeholder = 'Search cities…' }: CitySearchInputProps) {
+export function CitySearchInput({ onSelect, placeholder = 'Search cities…', initialQuery = '' }: CitySearchInputProps) {
   const { query, setQuery, results, isLoading, error } = useCitySearch()
-  const [isOpen, setIsOpen] = useState(false)
+  
+  // Sync state with initialQuery (e.g. from URL params)
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery)
+      setIsOpen(true)
+    }
+  }, [initialQuery, setQuery])
+
+  const [isOpen, setIsOpen] = useState(Boolean(initialQuery))
 
   const handleSelect = useCallback((city: CityResult) => {
     onSelect(city)

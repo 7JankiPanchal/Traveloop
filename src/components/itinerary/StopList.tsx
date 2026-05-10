@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -28,6 +28,11 @@ interface StopListProps {
 export function StopList({ tripId, initialStops }: StopListProps) {
   const [stops, setStops] = useState(initialStops)
   const [isPending, startTransition] = useTransition()
+
+  // Sync state with props when initialStops changes (e.g. after revalidation)
+  useEffect(() => {
+    setStops(initialStops)
+  }, [initialStops])
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 

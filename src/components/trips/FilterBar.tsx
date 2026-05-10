@@ -1,32 +1,46 @@
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Search, Filter, Layers, ListFilter } from 'lucide-react'
 
 export function FilterBar() {
+  const [query, setQuery] = useState('')
+  const router = useRouter()
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query)}`)
+    }
+  }
+
   return (
-    <div suppressHydrationWarning className="flex flex-col md:flex-row gap-4 items-center">
+    <div className="flex flex-col md:flex-row gap-4 items-center w-full">
       {/* Search Input */}
-      <div className="relative flex-1 group w-full">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant group-focus-within:text-primary transition-colors" />
+      <form onSubmit={handleSearch} className="relative flex-1 group w-full">
+        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant group-focus-within:text-primary transition-colors" />
         <input 
           type="text" 
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for destinations, trips, or activities..."
-          className="w-full h-14 bg-surface border border-outline-variant rounded-[20px] pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary/50 focus:bg-surface-bright transition-all"
+          className="w-full h-16 bg-[#FDF9F4] border border-[#E8E1D9] rounded-full pl-14 pr-6 text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm"
         />
-      </div>
+      </form>
 
       {/* Filter Buttons */}
-      <div className="flex items-center gap-2 w-full md:w-auto">
-        <button className="flex-1 md:flex-none h-14 px-6 bg-surface border border-outline-variant rounded-[20px] flex items-center justify-center gap-2 text-sm font-bold text-on-surface-variant hover:bg-surface-container hover:border-outline transition-all">
-          <Layers className="w-4 h-4" />
+      <div className="flex items-center gap-3 w-full md:w-auto">
+        <button className="flex-1 md:flex-none h-16 px-8 bg-[#FDF9F4] border border-[#E8E1D9] rounded-full flex items-center justify-center gap-3 text-sm font-semibold text-on-surface hover:bg-white hover:border-primary/30 transition-all shadow-sm">
+          <Layers className="w-4 h-4 text-on-surface-variant" />
           Group by
         </button>
-        <button className="flex-1 md:flex-none h-14 px-6 bg-surface border border-outline-variant rounded-[20px] flex items-center justify-center gap-2 text-sm font-bold text-on-surface-variant hover:bg-surface-container hover:border-outline transition-all">
-          <Filter className="w-4 h-4" />
+        <button className="flex-1 md:flex-none h-16 px-8 bg-[#FDF9F4] border border-[#E8E1D9] rounded-full flex items-center justify-center gap-3 text-sm font-semibold text-on-surface hover:bg-white hover:border-primary/30 transition-all shadow-sm">
+          <Filter className="w-4 h-4 text-on-surface-variant" />
           Filter
         </button>
-        <button className="flex-1 md:flex-none h-14 px-6 bg-surface border border-outline-variant rounded-[20px] flex items-center justify-center gap-2 text-sm font-bold text-on-surface-variant hover:bg-surface-container hover:border-outline transition-all">
-          <ListFilter className="w-4 h-4" />
+        <button className="flex-1 md:flex-none h-16 px-8 bg-[#FDF9F4] border border-[#E8E1D9] rounded-full flex items-center justify-center gap-3 text-sm font-semibold text-on-surface hover:bg-white hover:border-primary/30 transition-all shadow-sm">
+          <ListFilter className="w-4 h-4 text-on-surface-variant" />
           Sort by
         </button>
       </div>

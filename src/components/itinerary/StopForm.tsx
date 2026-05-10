@@ -35,13 +35,22 @@ export function StopForm({ tripId, existingStop, onSuccess }: StopFormProps) {
   })
 
   function onSubmit(data: CreateStopInput) {
+    if (data.arriveDate && data.departDate && new Date(data.departDate) < new Date(data.arriveDate)) {
+      alert('Departure date cannot be before arrival date.')
+      return
+    }
+
     startTransition(async () => {
-      if (isEdit && existingStop) {
-        await updateStop(tripId, { ...data, id: existingStop.id })
-      } else {
-        await createStop(tripId, data)
+      try {
+        if (isEdit && existingStop) {
+          await updateStop(tripId, { ...data, id: existingStop.id })
+        } else {
+          await createStop(tripId, data)
+        }
+        onSuccess?.()
+      } catch (err) {
+        alert('Failed to save stop. Please check your dates and city name.')
       }
-      onSuccess?.()
     })
   }
 
@@ -76,12 +85,15 @@ export function StopForm({ tripId, existingStop, onSuccess }: StopFormProps) {
         <div>
           <label className={labelClass}>Arrive Date</label>
           <input type="date" {...register('arriveDate')} className={inputClass} />
+          {errors.arriveDate && <p className={errorClass}>{errors.arriveDate.message}</p>}
         </div>
         <div>
           <label className={labelClass}>Depart Date</label>
           <input type="date" {...register('departDate')} className={inputClass} />
+          {errors.departDate && <p className={errorClass}>{errors.departDate.message}</p>}
         </div>
       </div>
+
       <div>
         <label className={labelClass}>Estimated Budget (USD)</label>
         <input type="number" {...register('estimatedBudget', { setValueAs: v => v === "" ? undefined : Number(v) })} className={inputClass} placeholder="0" min="0" />

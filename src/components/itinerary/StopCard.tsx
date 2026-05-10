@@ -39,8 +39,16 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
 
   function handleDelete() {
     if (!confirm('Delete this stop and all its activities?')) return
-    startTransition(() => deleteStop(tripId, stop.id))
+    startTransition(async () => {
+      try {
+        await deleteStop(tripId, stop.id)
+      } catch (err) {
+        alert('Failed to delete stop. Please try again.')
+        console.error(err)
+      }
+    })
   }
+
 
   return (
     <div ref={setNodeRef} style={style} className="rounded-2xl bg-surface-bright border border-outline-variant overflow-hidden transition-shadow hover:shadow-lg hover:shadow-black/5">

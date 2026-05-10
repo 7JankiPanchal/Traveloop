@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/Button'
 import { formatDate, formatCurrency, serialize } from '@/lib/utils'
 import type { StopWithActivities } from '@/types/itinerary'
 
+import { TripTabs } from '@/components/trips/TripTabs'
+import Link from 'next/link'
+
 interface BuilderPageProps {
   params: Promise<{ tripId: string }>
 }
@@ -27,31 +30,51 @@ export default async function BuilderPage({ params }: BuilderPageProps) {
   if (!rawTrip) notFound()
 
   const trip = serialize(rawTrip)
-
   const budget = Number(trip.budgetLimit ?? 0)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Trip header */}
-      <div className="rounded-2xl bg-surface-bright border border-outline-variant p-6">
-        <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-on-surface">{trip.title}</h1>
+            <h1 className="text-3xl font-bold text-on-surface tracking-tight">{trip.title}</h1>
             {trip.description && <p className="text-on-surface-variant mt-1 text-sm">{trip.description}</p>}
-            <div className="flex items-center gap-4 mt-2 text-sm text-outline">
-              {trip.startDate && <span>{formatDate(trip.startDate)} → {formatDate(trip.endDate)}</span>}
-              {budget > 0 && <span>Budget: {formatCurrency(budget)}</span>}
-              <span>{trip.stops.length} stops</span>
+            <div className="flex items-center gap-4 mt-3 text-sm">
+              {trip.startDate && (
+                <span className="flex items-center gap-1.5 text-on-surface-variant">
+                  <span className="text-outline">📅</span>
+                  {formatDate(trip.startDate)} → {formatDate(trip.endDate)}
+                </span>
+              )}
+              {budget > 0 && (
+                <span className="flex items-center gap-1.5 text-green-600 font-medium">
+                  <span className="text-outline">💰</span>
+                  Budget: {formatCurrency(budget)}
+                </span>
+              )}
+              <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-lg font-medium">
+                {trip.stops.length} stops
+              </span>
             </div>
           </div>
-          <a href={`/trips/${tripId}/view`}>
-            <Button variant="secondary" size="sm">View Timeline →</Button>
-          </a>
+          <div className="flex items-center gap-2">
+            <Link href={`/trips/${tripId}/view`}>
+              <Button variant="secondary" size="sm" className="bg-primary text-white hover:bg-primary/90 border-none shadow-md shadow-primary/20">
+                View Timeline →
+              </Button>
+            </Link>
+          </div>
         </div>
+
+        <TripTabs tripId={tripId} />
       </div>
 
       {/* Stop list */}
-      <StopList tripId={tripId} initialStops={JSON.parse(JSON.stringify(trip.stops)) as StopWithActivities[]} />
+      <div className="pt-2">
+        <StopList tripId={tripId} initialStops={JSON.parse(JSON.stringify(trip.stops)) as StopWithActivities[]} />
+      </div>
+
 
       {/* Add stop section */}
       <div className="rounded-2xl border border-dashed border-outline-variant p-6">

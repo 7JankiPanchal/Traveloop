@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma'
 import { requireUser } from '@/lib/auth/getCurrentUser'
 import { createStopSchema } from '@/lib/validations/stopSchema'
 import type { CreateStopInput } from '@/lib/validations/stopSchema'
+import { serialize } from '@/lib/utils'
 
 export async function createStop(tripId: string, input: CreateStopInput) {
   const user = await requireUser()
@@ -36,5 +37,5 @@ export async function createStop(tripId: string, input: CreateStopInput) {
   })
 
   revalidatePath(`/trips/${tripId}/builder`)
-  return stop
+  return serialize(stop)
 }

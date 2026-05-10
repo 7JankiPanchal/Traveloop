@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { requireUser } from '@/lib/auth/getCurrentUser'
+import { serialize } from '@/lib/utils'
 
 export async function assignActivity(tripId: string, stopId: string, activityId: string, scheduledDate?: string, costOverride?: number) {
   const user = await requireUser()
@@ -24,5 +25,5 @@ export async function assignActivity(tripId: string, stopId: string, activityId:
 
   revalidatePath(`/trips/${tripId}/builder`)
   revalidatePath(`/trips/${tripId}/view`)
-  return stopActivity
+  return serialize(stopActivity)
 }

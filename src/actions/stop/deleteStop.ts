@@ -10,7 +10,7 @@ export async function deleteStop(tripId: string, stopId: string) {
   const trip = await prisma.trip.findFirst({ where: { id: tripId, userId: user.id } })
   if (!trip) throw new Error('Trip not found or access denied')
 
-  await prisma.stop.delete({ where: { id: stopId, tripId } })
+  await prisma.stop.delete({ where: { id: stopId } })
 
   // Reorder remaining stops to close gaps
   const remaining = await prisma.stop.findMany({
@@ -24,4 +24,6 @@ export async function deleteStop(tripId: string, stopId: string) {
   )
 
   revalidatePath(`/trips/${tripId}/builder`)
+  revalidatePath(`/trips/${tripId}/view`)
+  revalidatePath(`/trips`)
 }
