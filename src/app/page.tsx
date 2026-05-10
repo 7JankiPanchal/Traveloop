@@ -7,7 +7,7 @@ export default async function LandingPage() {
 
   if (user) {
     return (
-      <div className="bg-[#0f1117] min-h-screen">
+      <div className="bg-surface-bright text-on-surface min-h-screen">
         <TripsDashboardContent user={user} />
       </div>
     )

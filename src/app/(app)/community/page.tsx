@@ -17,7 +17,7 @@ export default async function CommunityPage() {
       include: { user: true },
     })
   } catch (err) {
-    console.warn('[Community] community_posts table not found — using mock posts. Run `prisma migrate deploy` to create the table.', err)
+    // Warning suppressed for production
   }
 
   const mockPosts = [

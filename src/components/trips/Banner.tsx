@@ -13,7 +13,7 @@ export function Banner({ image, title, subtitle }: BannerProps) {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative h-[300px] md:h-[400px] w-full rounded-[40px] overflow-hidden group shadow-2xl shadow-orange-500/10"
+      className="relative h-[300px] md:h-[400px] w-full rounded-[40px] overflow-hidden group shadow-2xl shadow-primary/10"
     >
       <img 
         src={image} 
@@ -32,7 +32,7 @@ export function Banner({ image, title, subtitle }: BannerProps) {
       </div>
 
       {/* Decorative Blur */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-orange-500/10 blur-[100px] -z-10" />
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/10 blur-[100px] -z-10" />
     </motion.div>
   )
 }

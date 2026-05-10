@@ -20,7 +20,7 @@ export function CityCardSmall({ city }: CityCardSmallProps) {
       whileHover={{ y: -5 }}
       className="flex-shrink-0 w-[140px] md:w-[180px] space-y-3 cursor-pointer group"
     >
-      <div className="relative aspect-square rounded-[32px] overflow-hidden border border-white/5 shadow-xl transition-all group-hover:border-orange-500/30 group-hover:shadow-orange-500/10">
+      <div className="relative aspect-square rounded-[32px] overflow-hidden border border-outline-variant shadow-xl transition-all group-hover:border-primary/30 group-hover:shadow-primary/10">
         <img 
           src={imageUrl} 
           alt={city.name} 
@@ -29,8 +29,8 @@ export function CityCardSmall({ city }: CityCardSmallProps) {
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
       </div>
       <div>
-        <h3 className="font-bold text-white text-sm md:text-base group-hover:text-orange-400 transition-colors">{city.name}</h3>
-        <p className="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-wider">{city.country}</p>
+        <h3 className="font-bold text-on-surface text-sm md:text-base group-hover:text-primary transition-colors">{city.name}</h3>
+        <p className="text-[10px] md:text-xs text-on-surface-variant font-bold uppercase tracking-wider">{city.country}</p>
       </div>
     </motion.div>
   )

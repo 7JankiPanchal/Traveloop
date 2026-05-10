@@ -34,8 +34,8 @@ export function TripsDashboardContent({ user }: Props) {
   }, [])
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f1117]">
-      <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+    <div className="min-h-screen flex items-center justify-center bg-surface-bright">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
@@ -54,8 +54,8 @@ export function TripsDashboardContent({ user }: Props) {
       {activeTrip && (
         <section className="space-y-6">
           <div className="flex items-center gap-4">
-            <h2 className="text-xl font-bold text-white whitespace-nowrap">Current Adventure Insights</h2>
-            <div className="h-[1px] w-full bg-white/10" />
+            <h2 className="text-xl font-bold text-on-surface whitespace-nowrap">Current Adventure Insights</h2>
+            <div className="h-[1px] w-full bg-outline-variant" />
           </div>
           <TripInsights activeTrip={activeTrip} />
         </section>
@@ -63,8 +63,8 @@ export function TripsDashboardContent({ user }: Props) {
 
       <section className="space-y-6">
         <div className="flex items-center gap-4">
-          <h2 className="text-xl font-bold text-white whitespace-nowrap">Top Regional Selections</h2>
-          <div className="h-[1px] w-full bg-white/10" />
+          <h2 className="text-xl font-bold text-on-surface whitespace-nowrap">Top Regional Selections</h2>
+          <div className="h-[1px] w-full bg-outline-variant" />
         </div>
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {featuredCities.map((city: any) => (
@@ -75,8 +75,8 @@ export function TripsDashboardContent({ user }: Props) {
 
       <section className="space-y-6">
         <div className="flex items-center gap-4">
-          <h2 className="text-xl font-bold text-white whitespace-nowrap">Your Journeys</h2>
-          <div className="h-[1px] w-full bg-white/10" />
+          <h2 className="text-xl font-bold text-on-surface whitespace-nowrap">Your Journeys</h2>
+          <div className="h-[1px] w-full bg-outline-variant" />
         </div>
         {trips.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

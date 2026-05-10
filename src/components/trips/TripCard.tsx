@@ -32,7 +32,7 @@ export function TripCard({ trip }: TripCardProps) {
   return (
     <motion.div 
       whileHover={{ y: -8 }}
-      className="group relative h-[450px] rounded-[40px] overflow-hidden bg-[#1a1a1c] border border-white/5 shadow-2xl transition-all hover:border-orange-500/30"
+      className="group relative h-[450px] rounded-[40px] overflow-hidden bg-surface border border-outline-variant shadow-2xl transition-all hover:border-primary/30"
     >
       {/* Background Image */}
       <img 
@@ -48,7 +48,7 @@ export function TripCard({ trip }: TripCardProps) {
       <div className="absolute inset-0 p-8 flex flex-col justify-between">
         <div className="flex justify-between items-start">
           <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white">
-            <MapPin className="w-3 h-3 text-orange-500" />
+            <MapPin className="w-3 h-3 text-primary" />
             {trip.stops?.length ?? 0} Stops
           </div>
 
@@ -80,12 +80,12 @@ export function TripCard({ trip }: TripCardProps) {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="text-3xl font-black text-white tracking-tighter group-hover:text-orange-400 transition-colors">
+            <h3 className="text-3xl font-black text-white tracking-tighter group-hover:text-primary transition-colors">
               {trip.title}
             </h3>
             {trip.startDate && (
               <div className="flex items-center gap-2 text-slate-300 text-sm font-medium">
-                <Calendar className="w-4 h-4 text-orange-500" />
+                <Calendar className="w-4 h-4 text-primary" />
                 {formatDate(trip.startDate)} {trip.endDate && `→ ${formatDate(trip.endDate)}`}
               </div>
             )}
@@ -96,7 +96,7 @@ export function TripCard({ trip }: TripCardProps) {
             className="flex items-center justify-between w-full p-5 bg-white/10 backdrop-blur-xl rounded-[24px] border border-white/10 text-white font-bold group/btn hover:bg-white/20 transition-all"
           >
             Manage Journey
-            <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center transition-transform group-hover/btn:translate-x-1">
+            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center transition-transform group-hover/btn:translate-x-1">
               <ArrowRight className="w-5 h-5" />
             </div>
           </a>

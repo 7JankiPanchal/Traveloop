@@ -27,7 +27,7 @@ export async function createCommunityPost(formData: FormData) {
     revalidatePath('/community')
     return { success: true }
   } catch (error) {
-    console.error('Failed to create post:', error)
+    // Error log suppressed for production
     return { success: false, error: 'Failed to create post' }
   }
 }
