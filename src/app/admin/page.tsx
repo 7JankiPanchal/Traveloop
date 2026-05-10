@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation'
+import { getCurrentUser } from '@/lib/auth/getCurrentUser'
 import prisma from '@/lib/prisma'
 import { serialize } from '@/lib/utils'
 import { StatCard } from '@/components/admin/StatCard'
@@ -7,6 +9,10 @@ import { TrendsChart } from '@/components/admin/TrendsChart'
 import { LayoutDashboard, Users, Map, Plane, Activity } from 'lucide-react'
 
 export default async function AdminDashboardPage() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/login?callbackUrl=/admin')
+  if (!user.isAdmin) redirect('/trips')
+
   // Fetch Stats
   const totalUsers = await prisma.user.count()
   const totalTrips = await prisma.trip.count()

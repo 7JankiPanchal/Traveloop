@@ -14,7 +14,9 @@ async function resolveUserFromToken(): Promise<AuthUser | null> {
         id: 'dev-user-00000000-0000-0000-0000-000000000000',
         email: 'dev@traveloop.app',
         name: 'Dev User',
+        firstName: 'Dev',
         avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dev',
+        isAdmin: false,
       }
     }
     return null
@@ -26,7 +28,7 @@ async function resolveUserFromToken(): Promise<AuthUser | null> {
   // Fetch from DB to get the latest avatarUrl and name
   const user = await prisma.user.findUnique({
     where: { id: payload.userId as string },
-    select: { id: true, email: true, firstName: true, lastName: true, avatarUrl: true }
+    select: { id: true, email: true, firstName: true, lastName: true, avatarUrl: true, isAdmin: true }
   })
 
   if (!user) return null
@@ -34,8 +36,10 @@ async function resolveUserFromToken(): Promise<AuthUser | null> {
   return { 
     id: user.id, 
     email: user.email, 
+    firstName: user.firstName ?? null,
     name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User',
-    avatarUrl: user.avatarUrl || undefined
+    avatarUrl: user.avatarUrl ?? null,
+    isAdmin: user.isAdmin,
   }
 }
 

@@ -4,5 +4,7 @@ export interface AuthUser {
   id: string
   email: string
   name: string
-  avatarUrl?: string
+  firstName?: string | null
+  avatarUrl?: string | null
+  isAdmin: boolean
 }
