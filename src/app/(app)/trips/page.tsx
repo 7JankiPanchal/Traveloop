@@ -8,6 +8,8 @@ import { FilterBar } from '@/components/trips/FilterBar'
 import { PlanTripFAB } from '@/components/trips/PlanTripFAB'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { TripInsights } from '@/components/trips/TripInsights'
+import Link from 'next/link'
+import { Button } from '@/components/ui/Button'
 
 export default async function TripsDashboard() {
   const user = await getCurrentUser()
@@ -29,7 +31,7 @@ export default async function TripsDashboard() {
   // Fetch User Trips
   const userTrips = await prisma.trip.findMany({
     where: { userId: user.id },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { startDate: 'asc' }, // Sort by date
     include: {
       stops: true,
       budgetEntries: true,
@@ -40,33 +42,50 @@ export default async function TripsDashboard() {
     }
   })
 
-  // Find the active trip (e.g., currently happening or most recent)
   const now = new Date()
-  const activeTrip = userTrips.find(t => 
-    t.startDate && t.endDate && t.startDate <= now && t.endDate >= now
-  ) || userTrips[0] // Fallback to most recent
+  now.setHours(0, 0, 0, 0) // Normalize to start of day
 
-  const trips = serialize(userTrips)
+  // Categorize Trips
+  const ongoingTrips = userTrips.filter(t => 
+    t.startDate && t.endDate && t.startDate <= now && t.endDate >= now
+  )
+  
+  const upcomingTrips = userTrips.filter(t => 
+    !t.startDate || t.startDate > now
+  )
+  
+  const completedTrips = userTrips.filter(t => 
+    t.endDate && t.endDate < now
+  )
+
+  // Find the active trip (e.g., currently happening or most recent upcoming)
+  const activeTrip = ongoingTrips[0] || upcomingTrips[0] || userTrips[0]
+
+  const serializedOngoing = serialize(ongoingTrips)
+  const serializedUpcoming = serialize(upcomingTrips)
+  const serializedCompleted = serialize(completedTrips)
   const cities = serialize(featuredCities)
 
-  // Banner image - could be dynamic or fixed
+  // Banner image
   const bannerImage = "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"
 
   return (
     <div className="relative pb-24 space-y-12">
-      {/* Header (Traveloop Logo & Profile handled by layout.tsx) */}
-      
-      {/* Banner Image */}
+      <div className="flex justify-between items-center px-8 pt-6">
+        <h1 className="text-3xl font-bold text-white">My Trips</h1>
+        <Link href="/trips/new">
+          <Button>Create New Trip</Button>
+        </Link>
+      </div>
+
       <Banner 
         image={bannerImage} 
         title="Explore the World" 
         subtitle="Discover hidden gems and plan your next big adventure"
       />
 
-      {/* Search & Filter Bar */}
       <FilterBar />
 
-      {/* Trip Insights (Budget, Itinerary, Notes) */}
       {activeTrip && (
         <section className="space-y-6">
           <div className="flex items-center gap-4">
@@ -77,7 +96,60 @@ export default async function TripsDashboard() {
         </section>
       )}
 
-      {/* Top Regional Selections */}
+      {/* Ongoing Trips */}
+      {serializedOngoing.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-bold text-orange-400 whitespace-nowrap">Ongoing Trips</h2>
+            <div className="h-[1px] w-full bg-orange-400/20" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {serializedOngoing.map((trip: any) => (
+              <TripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Upcoming Trips */}
+      {serializedUpcoming.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-bold text-white whitespace-nowrap">Upcoming Trips</h2>
+            <div className="h-[1px] w-full bg-white/10" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {serializedUpcoming.map((trip: any) => (
+              <TripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Completed Trips */}
+      {serializedCompleted.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-bold text-slate-400 whitespace-nowrap">Completed Trips</h2>
+            <div className="h-[1px] w-full bg-white/10" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-75">
+            {serializedCompleted.map((trip: any) => (
+              <TripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {userTrips.length === 0 && (
+        <section className="space-y-6">
+          <EmptyState 
+            title="No trips planned yet" 
+            description="Start by exploring destinations or creating your first adventure."
+          />
+        </section>
+      )}
+
       <section className="space-y-6">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-bold text-white whitespace-nowrap">Top Regional Selections</h2>
@@ -91,28 +163,6 @@ export default async function TripsDashboard() {
         </div>
       </section>
 
-      {/* Previous Trips */}
-      <section className="space-y-6">
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl font-bold text-white whitespace-nowrap">Previous Trips</h2>
-          <div className="h-[1px] w-full bg-white/10" />
-        </div>
-
-        {trips.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {trips.map((trip: any) => (
-              <TripCard key={trip.id} trip={trip} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState 
-            title="No trips planned yet" 
-            description="Start by exploring destinations or creating your first adventure."
-          />
-        )}
-      </section>
-
-      {/* Floating Action Button */}
       <PlanTripFAB />
     </div>
   )
