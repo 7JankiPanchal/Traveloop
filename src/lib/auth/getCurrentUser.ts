@@ -1,36 +1,42 @@
-/**
- * Auth abstraction — PASETO-ready stub.
- *
- * This file is the ONLY place auth provider logic should live.
- * Features import from here, never from the auth provider SDK directly.
- *
- * TODO (auth team): Replace the stub body with PASETO token verification.
- * The token should be read from the `Authorization` header or an HttpOnly cookie.
- * Use the `paseto` npm package (https://github.com/nickel-lang/paseto-standard/paseto-spec)
- *
- * Expected token payload shape: { sub: string, email: string, name: string }
- */
-
+import { cookies } from 'next/headers'
+import { verifyToken } from '@/lib/auth'
+import prisma from '@/lib/prisma'
 import type { AuthUser } from '@/types/auth'
 
-// ─── Internal token reader (stub) ─────────────────────────────────────────
+// ─── Internal token reader ─────────────────────────────────────────
 async function resolveUserFromToken(): Promise<AuthUser | null> {
-  // TODO: Parse PASETO v4.local or v4.public token from request cookies/headers.
-  // Example structure once implemented:
-  //   const token = cookies().get('session')?.value
-  //   const payload = await V4.verify(token, secretKey)
-  //   return { id: payload.sub, email: payload.email, name: payload.name }
+  const cookieStore = await cookies()
+  const token = cookieStore.get('token')?.value
 
-  // DEV STUB: returns a mock user so builder/view screens work before auth ships.
-  if (process.env.NODE_ENV === 'development') {
-    return {
-      id: 'dev-user-00000000-0000-0000-0000-000000000000',
-      email: 'dev@traveloop.app',
-      name: 'Dev User',
+  if (!token) {
+    if (process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH === 'true') {
+      return {
+        id: 'dev-user-00000000-0000-0000-0000-000000000000',
+        email: 'dev@traveloop.app',
+        name: 'Dev User',
+        avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dev',
+      }
     }
+    return null
   }
 
-  return null
+  const payload = await verifyToken(token)
+  if (!payload || !payload.userId) return null
+
+  // Fetch from DB to get the latest avatarUrl and name
+  const user = await prisma.user.findUnique({
+    where: { id: payload.userId as string },
+    select: { id: true, email: true, firstName: true, lastName: true, avatarUrl: true }
+  })
+
+  if (!user) return null
+
+  return { 
+    id: user.id, 
+    email: user.email, 
+    name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User',
+    avatarUrl: user.avatarUrl || undefined
+  }
 }
 
 // ─── Public API ────────────────────────────────────────────────────────────
@@ -49,3 +55,4 @@ export async function requireUser(): Promise<AuthUser> {
   }
   return user
 }
+
