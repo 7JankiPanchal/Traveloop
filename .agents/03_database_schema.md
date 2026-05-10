@@ -1,9 +1,10 @@
 # Database Schema
 
-### Entity Relationship Overview
+## Entity Relationship Overview
+
 The core chain is: `users → trips → stops → cities`. Activities are a catalogue tied to cities and attached to stops via a join table. All enrichment tables (notes, packing items, budget entries) hang off trips or stops.
 
-```
+```text
 users
   └── trips
         ├── stops ──── cities ──── activities
@@ -15,9 +16,10 @@ users
 users ──── saved_destinations ──── cities
 ```
 
-### Table Definitions
+## Table Definitions
 
-#### `users`
+### `users`
+
 - `id`: `uuid` (PK)
 - `email`: `varchar(255)` (Unique)
 - `password_hash`: `text`
@@ -27,7 +29,8 @@ users ──── saved_destinations ──── cities
 - `created_at`: `timestamptz`
 - `updated_at`: `timestamptz`
 
-#### `trips`
+### `trips`
+
 - `id`: `uuid` (PK)
 - `user_id`: `uuid` (FK → `users.id`)
 - `title`: `varchar(200)`
@@ -39,7 +42,8 @@ users ──── saved_destinations ──── cities
 - `share_token`: `varchar(64)` (Unique)
 - `is_public`: `boolean`
 
-#### `cities`
+### `cities`
+
 - `id`: `uuid` (PK)
 - `name`: `varchar(100)`
 - `country`: `varchar(100)`
@@ -48,7 +52,8 @@ users ──── saved_destinations ──── cities
 - `popularity_score`: `integer`
 - `cover_photo_url`: `text`
 
-#### `stops`
+### `stops`
+
 - `id`: `uuid` (PK)
 - `trip_id`: `uuid` (FK → `trips.id`)
 - `city_id`: `uuid` (FK → `cities.id`)
@@ -56,7 +61,8 @@ users ──── saved_destinations ──── cities
 - `arrive_date`: `date`
 - `depart_date`: `date`
 
-#### `activities`
+### `activities`
+
 - `id`: `uuid` (PK)
 - `city_id`: `uuid` (FK → `cities.id`)
 - `name`: `varchar(200)`
@@ -66,7 +72,8 @@ users ──── saved_destinations ──── cities
 - `duration_minutes`: `integer`
 - `image_url`: `text`
 
-#### `stop_activities`
+### `stop_activities`
+
 - `id`: `uuid` (PK)
 - `stop_id`: `uuid` (FK → `stops.id`)
 - `activity_id`: `uuid` (FK → `activities.id`)
@@ -74,20 +81,23 @@ users ──── saved_destinations ──── cities
 - `scheduled_time`: `time`
 - `cost_override`: `numeric(8,2)`
 
-#### `packing_items`
+### `packing_items`
+
 - `id`: `uuid` (PK)
 - `trip_id`: `uuid` (FK → `trips.id`)
 - `label`: `varchar(200)`
 - `category`: `varchar(50)`
 - `is_packed`: `boolean`
 
-#### `notes`
+### `notes`
+
 - `id`: `uuid` (PK)
 - `trip_id`: `uuid` (FK → `trips.id`)
 - `stop_id`: `uuid` (FK → `stops.id`, nullable)
 - `body`: `text`
 
-#### `budget_entries`
+### `budget_entries`
+
 - `id`: `uuid` (PK)
 - `trip_id`: `uuid` (FK → `trips.id`)
 - `stop_id`: `uuid` (FK → `stops.id`, nullable)
@@ -96,14 +106,15 @@ users ──── saved_destinations ──── cities
 - `amount`: `numeric(10,2)`
 - `recorded_at`: `timestamptz`
 
-#### `saved_destinations`
+### `saved_destinations`
+
 - `id`: `uuid` (PK)
 - `user_id`: `uuid` (FK → `users.id`)
 - `city_id`: `uuid` (FK → `cities.id`)
 
 ---
 
-### SQL Create Statements
+## SQL Create Statements
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";

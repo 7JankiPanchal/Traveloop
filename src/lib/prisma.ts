@@ -1,24 +1,32 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from './generated/prisma/client'
 import { PrismaNeon } from '@prisma/adapter-neon'
-import { Pool, neonConfig } from '@neondatabase/serverless'
+import { neonConfig } from '@neondatabase/serverless'
 import ws from 'ws'
 
-if (typeof window === 'undefined') {
+// Use WebSocket in Node.js environments (not needed in the browser / Edge)
+if (typeof globalThis.WebSocket === 'undefined') {
   neonConfig.webSocketConstructor = ws
 }
 
-const prismaClientSingleton = () => {
-  const neon = new Pool({ connectionString: process.env.DATABASE_URL })
-  const adapter = new PrismaNeon(neon as any)
+const createPrismaClient = () => {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is not set')
+  }
+  // v7 API: pass connection config directly — PrismaNeon manages the pool internally
+  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL })
   return new PrismaClient({ adapter })
 }
 
 declare global {
-  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>
+  // eslint-disable-next-line no-var
+  var prismaGlobal: ReturnType<typeof createPrismaClient> | undefined
 }
 
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
+const prisma = globalThis.prismaGlobal ?? createPrismaClient()
 
 export default prisma
 
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
+// Prevent multiple instances in dev due to hot-reloading
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.prismaGlobal = prisma
+}
