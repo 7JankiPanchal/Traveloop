@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { hashPassword, createToken } from '@/lib/auth'
+import { generateAvatarDataUri } from '@/lib/avatars'
 
 export async function POST(request: Request) {
   try {
@@ -25,6 +26,10 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await hashPassword(password)
+    
+    // Generate a random avatar using DiceBear library
+    const avatarUrl = generateAvatarDataUri(email)
+
     const user = await prisma.user.create({
       data: {
         email,
@@ -35,6 +40,7 @@ export async function POST(request: Request) {
         city,
         country,
         additionalInfo,
+        avatarUrl,
       },
     })
 
