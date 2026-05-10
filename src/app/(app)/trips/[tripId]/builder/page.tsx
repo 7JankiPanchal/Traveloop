@@ -4,7 +4,7 @@ import { getItinerary } from '@/services/itinerary/getItinerary'
 import { StopList } from '@/components/itinerary/StopList'
 import { StopForm } from '@/components/itinerary/StopForm'
 import { Button } from '@/components/ui/Button'
-import { formatDate, formatCurrency } from '@/lib/utils'
+import { formatDate, formatCurrency, serialize } from '@/lib/utils'
 import type { StopWithActivities } from '@/types/itinerary'
 
 interface BuilderPageProps {
@@ -23,8 +23,10 @@ export default async function BuilderPage({ params }: BuilderPageProps) {
     )
   }
 
-  const trip = await getItinerary(tripId, user.id)
-  if (!trip) notFound()
+  const rawTrip = await getItinerary(tripId, user.id)
+  if (!rawTrip) notFound()
+
+  const trip = serialize(rawTrip)
 
   const budget = Number(trip.budgetLimit ?? 0)
 

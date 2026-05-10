@@ -7,18 +7,27 @@ import type { Activity } from '@/lib/generated/prisma/client'
  */
 export async function searchActivities(
   query: string,
+  category?: string,
+  maxCost?: number,
+  cityId?: string,
   limit = 12
 ): Promise<Activity[]> {
   const results = await prisma.activity.findMany({
-    where: query
-      ? {
-          OR: [
-            { name: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } },
-            { category: { contains: query, mode: 'insensitive' } },
-          ],
-        }
-      : undefined,
+    where: {
+      AND: [
+        query
+          ? {
+              OR: [
+                { name: { contains: query, mode: 'insensitive' } },
+                { description: { contains: query, mode: 'insensitive' } },
+              ],
+            }
+          : {},
+        category ? { category: { equals: category, mode: 'insensitive' } } : {},
+        maxCost ? { baseCost: { lte: maxCost } } : {},
+        cityId ? { cityId } : {},
+      ],
+    },
     take: limit,
     orderBy: { name: 'asc' },
   })
