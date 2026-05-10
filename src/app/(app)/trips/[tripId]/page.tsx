@@ -16,7 +16,7 @@ export default async function TripDetailPage({ params }: TripPageProps) {
   const user = await getCurrentUser()
 
   if (!user) {
-    return <div className="text-center py-20 text-slate-400">Please sign in.</div>
+    return <div className="text-center py-20 text-on-surface-variant">Please sign in.</div>
   }
 
   const trip = await prisma.trip.findUnique({
@@ -45,7 +45,7 @@ export default async function TripDetailPage({ params }: TripPageProps) {
   const serializedTrip = serialize(trip)
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white pb-20 space-y-12">
+    <div className="min-h-screen bg-surface-bright text-on-surface pb-20 space-y-12">
       {/* Trip Hero Section */}
       <TripHero trip={serializedTrip} />
 
@@ -55,7 +55,7 @@ export default async function TripDetailPage({ params }: TripPageProps) {
           <section id="itinerary">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-3xl font-black tracking-tighter">Itinerary</h2>
-              <a href={`/trips/${tripId}/builder`} className="text-sm font-bold text-orange-500 hover:text-orange-400 transition-colors">
+              <a href={`/trips/${tripId}/builder`} className="text-sm font-bold text-primary hover:text-primary/80 transition-colors">
                 Edit Stops →
               </a>
             </div>

@@ -35,7 +35,7 @@ export function ActivityCard({ stopActivity, tripId, stopId }: ActivityCardProps
 
   if (isEditing) {
     return (
-      <div className="p-4 bg-white/5">
+      <div className="p-4 bg-outline-variant/50">
         <ActivityForm
           tripId={tripId}
           stopId={stopId}
@@ -47,17 +47,17 @@ export function ActivityCard({ stopActivity, tripId, stopId }: ActivityCardProps
   }
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 group hover:bg-white/[0.03] transition-colors">
-      <div className="w-2 h-2 rounded-full bg-orange-500/60 shrink-0" />
+    <div className="flex items-center gap-3 px-4 py-3 group hover:bg-outline-variant/30 transition-colors">
+      <div className="w-2 h-2 rounded-full bg-primary/60 shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-white truncate">{activity.name}</span>
+          <span className="text-sm font-medium text-on-surface truncate">{activity.name}</span>
           <Badge label={cat} variant={categoryColors[cat] ?? 'default'} />
         </div>
-        <div className="flex items-center gap-3 text-xs text-slate-500 mt-0.5">
+        <div className="flex items-center gap-3 text-xs text-outline mt-0.5">
           {stopActivity.scheduledDate && <span>{formatDate(stopActivity.scheduledDate)}</span>}
           {activity.durationMinutes && <span>{activity.durationMinutes}m</span>}
-          {cost > 0 && <span className="text-emerald-400">{formatCurrency(cost)}</span>}
+          {cost > 0 && <span className="text-green-600">{formatCurrency(cost)}</span>}
         </div>
       </div>
       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

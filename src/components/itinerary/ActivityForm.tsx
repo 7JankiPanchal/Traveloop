@@ -51,8 +51,8 @@ export function ActivityForm({ tripId, stopId, existingStopActivity, onSuccess }
     })
   }
 
-  const inputClass = 'w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors'
-  const labelClass = 'text-xs font-medium text-slate-400 mb-1 block'
+  const inputClass = 'w-full bg-surface-container border border-outline rounded-xl px-3 py-2 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary transition-colors'
+  const labelClass = 'text-xs font-medium text-on-surface-variant mb-1 block'
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">

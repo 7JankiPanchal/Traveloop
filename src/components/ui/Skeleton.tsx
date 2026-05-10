@@ -6,13 +6,13 @@ interface SkeletonProps {
 
 export function Skeleton({ className }: SkeletonProps) {
   return (
-    <div className={cn('animate-pulse rounded-xl bg-white/5', className)} />
+    <div className={cn('animate-pulse rounded-xl bg-surface-container', className)} />
   )
 }
 
 export function StopCardSkeleton() {
   return (
-    <div className="rounded-2xl bg-[#1a1d2e] border border-white/5 p-6 space-y-4">
+    <div className="rounded-2xl bg-surface-bright border border-outline-variant p-6 space-y-4">
       <div className="flex items-center gap-3">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="space-y-2 flex-1">

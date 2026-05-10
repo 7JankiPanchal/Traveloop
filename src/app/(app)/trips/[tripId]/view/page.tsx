@@ -4,7 +4,7 @@ import { getItinerary } from '@/services/itinerary/getItinerary'
 import { transformItinerary } from '@/services/itinerary/transformItinerary'
 import { ItineraryTimeline } from '@/components/itinerary/ItineraryTimeline'
 import { Button } from '@/components/ui/Button'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDate, serialize } from '@/lib/utils'
 
 interface ViewPageProps {
   params: Promise<{ tripId: string }>
@@ -21,22 +21,22 @@ export default async function ViewPage({ params }: ViewPageProps) {
   const trip = await getItinerary(tripId, user.id)
   if (!trip) notFound()
 
-  const data = transformItinerary(trip)
+  const data = serialize(transformItinerary(trip))
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">{trip.title}</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-on-surface">{trip.title}</h1>
+          <p className="text-on-surface-variant text-sm mt-1">
             {trip.stops.length} stops · {formatCurrency(data.totals.overall)} total
             {trip.startDate && ` · ${formatDate(trip.startDate)} → ${formatDate(trip.endDate)}`}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <a href={`/trips/${tripId}/notes`}>
-            <Button variant="secondary" size="sm" className="bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20">
+            <Button variant="secondary" size="sm" className="bg-primary/10 border-primary/20 text-primary hover:bg-primary/20">
               📔 Journal
             </Button>
           </a>
@@ -48,13 +48,13 @@ export default async function ViewPage({ params }: ViewPageProps) {
 
       {/* Cost breakdown */}
       {Object.keys(data.totals.byCategory).length > 0 && (
-        <div className="rounded-2xl bg-[#1a1d2e] border border-white/5 p-4">
-          <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Spending by Category</h2>
+        <div className="rounded-2xl bg-surface-container border border-outline-variant p-4">
+          <h2 className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-3">Spending by Category</h2>
           <div className="flex flex-wrap gap-3">
             {Object.entries(data.totals.byCategory).map(([cat, amt]) => (
-              <div key={cat} className="bg-white/5 rounded-xl px-3 py-2 text-sm">
-                <span className="text-slate-400">{cat}</span>
-                <span className="text-white font-semibold ml-2">{formatCurrency(amt)}</span>
+              <div key={cat} className="bg-surface border border-outline-variant rounded-xl px-3 py-2 text-sm">
+                <span className="text-on-surface-variant">{cat}</span>
+                <span className="text-on-surface font-semibold ml-2">{formatCurrency(amt as number)}</span>
               </div>
             ))}
           </div>

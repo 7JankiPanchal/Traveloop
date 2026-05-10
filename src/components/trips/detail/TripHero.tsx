@@ -24,8 +24,8 @@ export function TripHero({ trip }: TripHeroProps) {
       />
       
       {/* Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/40 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#030303]/60 via-transparent to-[#030303]/60" />
+      <div className="absolute inset-0 bg-gradient-to-t from-surface-bright via-surface-bright/80 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-surface-bright/60 via-transparent to-surface-bright/60" />
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-end pb-12 px-8">
@@ -36,11 +36,11 @@ export function TripHero({ trip }: TripHeroProps) {
             transition={{ delay: 0.5 }}
             className="flex items-center gap-3"
           >
-            <div className="px-4 py-1.5 bg-orange-500 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-orange-500/20">
+            <div className="px-4 py-1.5 bg-primary rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-primary/20">
               Active Journey
             </div>
             {trip.isPublic && (
-              <div className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-white border border-white/10">
+              <div className="px-4 py-1.5 bg-surface-container/50 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-on-surface border border-outline">
                 Public Trip
               </div>
             )}
@@ -53,13 +53,13 @@ export function TripHero({ trip }: TripHeroProps) {
               transition={{ delay: 0.7 }}
               className="space-y-4"
             >
-              <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-white leading-tight">
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-on-surface leading-tight">
                 {trip.title}
               </h1>
               
-              <div className="flex flex-wrap items-center gap-6 text-white/70">
+              <div className="flex flex-wrap items-center gap-6 text-on-surface-variant">
                 <div className="flex items-center gap-2 font-medium">
-                  <Calendar className="w-5 h-5 text-orange-500" />
+                  <Calendar className="w-5 h-5 text-primary" />
                   {trip.startDate ? (
                     <span>{formatDate(trip.startDate)} → {formatDate(trip.endDate)}</span>
                   ) : (
@@ -67,7 +67,7 @@ export function TripHero({ trip }: TripHeroProps) {
                   )}
                 </div>
                 <div className="flex items-center gap-2 font-medium">
-                  <MapPin className="w-5 h-5 text-orange-500" />
+                  <MapPin className="w-5 h-5 text-primary" />
                   <span>{trip.stops?.length || 0} Destinations</span>
                 </div>
               </div>
@@ -79,13 +79,13 @@ export function TripHero({ trip }: TripHeroProps) {
               transition={{ delay: 0.9 }}
               className="flex items-center gap-3"
             >
-              <button className="p-4 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-2xl border border-white/10 text-white transition-all">
+              <button className="p-4 bg-surface-container/80 hover:bg-surface-container backdrop-blur-xl rounded-2xl border border-outline text-on-surface transition-all">
                 <Share2 className="w-6 h-6" />
               </button>
-              <button className="p-4 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-2xl border border-white/10 text-white transition-all">
+              <button className="p-4 bg-surface-container/80 hover:bg-surface-container backdrop-blur-xl rounded-2xl border border-outline text-on-surface transition-all">
                 <MoreVertical className="w-6 h-6" />
               </button>
-              <a href={`/trips/${trip.id}/builder`} className="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl">
+              <a href={`/trips/${trip.id}/builder`} className="px-8 py-4 bg-on-surface text-surface-bright font-bold rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl">
                 Edit Trip
               </a>
             </motion.div>

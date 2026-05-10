@@ -48,26 +48,26 @@ export function BudgetModule({ budgetLimit, entries, tripId }: BudgetModuleProps
   return (
     <div className="space-y-6">
       {/* Summary Card */}
-      <div className="p-8 rounded-[40px] bg-[#1a1d2e] border border-white/5 space-y-6 shadow-2xl relative overflow-hidden group">
+      <div className="p-8 rounded-[40px] bg-surface-bright border border-outline-variant space-y-6 shadow-2xl relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-          <Wallet className="w-24 h-24 text-orange-500" />
+          <Wallet className="w-24 h-24 text-primary" />
         </div>
 
         <div className="space-y-1">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Total Spent</p>
-          <h3 className="text-4xl font-black text-white">{formatCurrency(totalSpent)}</h3>
-          <p className="text-sm text-slate-400">of {formatCurrency(budgetLimit)} limit</p>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-outline">Total Spent</p>
+          <h3 className="text-4xl font-black text-on-surface">{formatCurrency(totalSpent)}</h3>
+          <p className="text-sm text-on-surface-variant">of {formatCurrency(budgetLimit)} limit</p>
         </div>
 
         <div className="space-y-3">
-          <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden">
+          <div className="h-3 w-full bg-surface-container rounded-full overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${spentPercentage}%` }}
-              className={`h-full bg-gradient-to-r ${spentPercentage > 90 ? 'from-red-500 to-orange-500' : 'from-orange-500 to-yellow-500'}`}
+              className={`h-full bg-gradient-to-r ${spentPercentage > 90 ? 'from-red-500 to-primary' : 'from-primary to-yellow-500'}`}
             />
           </div>
-          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-outline">
             <span>{Math.round(spentPercentage)}% Used</span>
             <span className={remaining < 0 ? 'text-red-500' : ''}>
               {remaining < 0 ? 'Exceeded by ' : ''}{formatCurrency(Math.abs(remaining))} {remaining < 0 ? '' : 'Left'}
@@ -77,9 +77,9 @@ export function BudgetModule({ budgetLimit, entries, tripId }: BudgetModuleProps
 
         <button 
           onClick={() => setShowAdd(!showAdd)}
-          className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center gap-2 font-bold transition-all text-sm"
+          className="w-full py-4 bg-surface-container hover:bg-outline-variant/30 border border-outline rounded-2xl flex items-center justify-center gap-2 font-bold transition-all text-sm text-on-surface"
         >
-          <Plus className="w-4 h-4 text-orange-500" />
+          <Plus className="w-4 h-4 text-primary" />
           {showAdd ? 'Cancel' : 'Add Expense'}
         </button>
       </div>
@@ -93,19 +93,19 @@ export function BudgetModule({ budgetLimit, entries, tripId }: BudgetModuleProps
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <form action={handleAdd} className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-4">
+            <form action={handleAdd} className="p-6 rounded-[32px] bg-surface-container border border-outline space-y-4">
               <input type="hidden" name="tripId" value={tripId} />
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-2">Label</label>
-                  <input name="label" required type="text" placeholder="Flight, Dinner, etc." className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors" />
+                  <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-2">Label</label>
+                  <input name="label" required type="text" placeholder="Flight, Dinner, etc." className="w-full bg-surface-bright border border-outline rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors text-on-surface placeholder:text-outline" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-2">Amount</label>
-                  <input name="amount" required type="number" step="0.01" placeholder="0.00" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors" />
+                  <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-2">Amount</label>
+                  <input name="amount" required type="number" step="0.01" placeholder="0.00" className="w-full bg-surface-bright border border-outline rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors text-on-surface placeholder:text-outline" />
                 </div>
               </div>
-              <button disabled={isPending} type="submit" className="w-full py-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:bg-orange-600 transition-colors disabled:opacity-50">
+              <button disabled={isPending} type="submit" className="w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-colors disabled:opacity-50">
                 {isPending ? 'Saving...' : 'Save Expense'}
               </button>
             </form>
@@ -115,32 +115,32 @@ export function BudgetModule({ budgetLimit, entries, tripId }: BudgetModuleProps
 
       {/* Recent Entries */}
       <div className="space-y-3">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-2">Recent Expenses</h4>
+        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-outline ml-2">Recent Expenses</h4>
         <div className="space-y-3">
           {entries.length > 0 ? entries.map((entry) => (
-            <div key={entry.id} className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between hover:bg-white/10 transition-colors group">
+            <div key={entry.id} className="p-4 rounded-2xl bg-surface-container border border-outline-variant flex items-center justify-between hover:bg-outline-variant/30 transition-colors group">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                  <Tag className="w-5 h-5 text-orange-500" />
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Tag className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{entry.label}</p>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase">{entry.category}</p>
+                  <p className="text-sm font-bold text-on-surface">{entry.label}</p>
+                  <p className="text-[10px] font-bold text-outline uppercase">{entry.category}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-black text-white">{formatCurrency(entry.amount)}</p>
+                <p className="text-sm font-black text-on-surface">{formatCurrency(entry.amount)}</p>
                 <button 
                   onClick={() => handleDelete(entry.id)}
                   disabled={isPending}
-                  className="text-[10px] text-red-500 font-bold uppercase opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="text-[10px] text-error font-bold uppercase opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   Remove
                 </button>
               </div>
             </div>
           )) : (
-            <p className="text-sm text-slate-500 text-center py-4">No expenses recorded yet.</p>
+            <p className="text-sm text-outline text-center py-4">No expenses recorded yet.</p>
           )}
         </div>
       </div>

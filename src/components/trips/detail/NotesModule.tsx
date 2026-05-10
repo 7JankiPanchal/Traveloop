@@ -47,18 +47,18 @@ export function NotesModule({ notes, tripId }: NotesModuleProps) {
       {/* Search & Actions */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-outline" />
           <input 
             type="text" 
             placeholder="Search your notes..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm focus:outline-none focus:border-purple-500 transition-colors"
+            className="w-full bg-surface-container border border-outline rounded-2xl pl-12 pr-4 py-4 text-sm focus:outline-none focus:border-primary transition-colors text-on-surface placeholder:text-outline"
           />
         </div>
         <button 
           onClick={() => setShowAdd(!showAdd)}
-          className="px-8 py-4 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-500/20"
+          className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/20"
         >
           {showAdd ? 'Cancel' : <><Plus className="w-5 h-5" /> Write Entry</>}
         </button>
@@ -70,22 +70,22 @@ export function NotesModule({ notes, tripId }: NotesModuleProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="p-8 rounded-[40px] bg-[#1a1d2e] border border-purple-500/30 shadow-2xl space-y-6"
+            className="p-8 rounded-[40px] bg-surface-bright border border-primary/30 shadow-2xl space-y-6"
           >
             <form action={handleAdd} className="space-y-6">
               <input type="hidden" name="tripId" value={tripId} />
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-2">Journal Entry</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-outline ml-2">Journal Entry</label>
                 <textarea 
                   name="body"
                   required
                   placeholder="What's on your mind? Thoughts about today's adventure..." 
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500 transition-colors min-h-[150px] resize-none"
+                  className="w-full bg-surface-container border border-outline rounded-2xl px-6 py-4 text-on-surface focus:outline-none focus:border-primary transition-colors min-h-[150px] resize-none placeholder:text-outline"
                 />
               </div>
               <div className="flex justify-end gap-3">
-                <button type="button" onClick={() => setShowAdd(false)} className="px-6 py-2 text-slate-400 font-bold hover:text-white transition-colors">Cancel</button>
-                <button disabled={isPending} type="submit" className="px-8 py-3 bg-purple-500 text-white font-bold rounded-xl hover:bg-purple-600 transition-colors disabled:opacity-50">
+                <button type="button" onClick={() => setShowAdd(false)} className="px-6 py-2 text-on-surface-variant font-bold hover:text-on-surface transition-colors">Cancel</button>
+                <button disabled={isPending} type="submit" className="px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50">
                   {isPending ? 'Saving...' : 'Save Entry'}
                 </button>
               </div>
@@ -102,42 +102,42 @@ export function NotesModule({ notes, tripId }: NotesModuleProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
             key={note.id} 
-            className="p-8 rounded-[40px] bg-white/5 border border-white/5 hover:border-purple-500/20 transition-all flex flex-col justify-between h-full group"
+            className="p-8 rounded-[40px] bg-surface-container border border-outline-variant hover:border-primary/20 transition-all flex flex-col justify-between h-full group"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-purple-500" />
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-primary" />
                 </div>
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-outline">
                   <Calendar className="w-3 h-3" />
                   {formatDate(note.createdAt)}
                 </div>
               </div>
-              <p className="text-white/80 leading-relaxed italic">
+              <p className="text-on-surface-variant leading-relaxed italic">
                 "{note.body}"
               </p>
             </div>
             
-            <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+            <div className="mt-8 pt-6 border-t border-outline-variant flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Tag className="w-3 h-3 text-slate-500" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                <Tag className="w-3 h-3 text-outline" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-outline">
                   {note.stop?.cityName || 'General Note'}
                 </span>
               </div>
               <button 
                 onClick={() => handleDelete(note.id)}
                 disabled={isPending}
-                className="text-[10px] font-black uppercase tracking-widest text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="text-[10px] font-black uppercase tracking-widest text-error opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 Delete
               </button>
             </div>
           </motion.div>
         )) : (
-          <div className="md:col-span-2 text-center py-20 bg-white/5 rounded-[40px] border border-dashed border-white/10">
-            <p className="text-slate-500 font-medium">No notes found. Capture your first memory!</p>
+          <div className="md:col-span-2 text-center py-20 bg-surface-container rounded-[40px] border border-dashed border-outline">
+            <p className="text-outline font-medium">No notes found. Capture your first memory!</p>
           </div>
         )}
       </div>

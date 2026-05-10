@@ -43,14 +43,14 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="rounded-2xl bg-[#1a1d2e] border border-white/5 overflow-hidden transition-shadow hover:shadow-lg hover:shadow-black/20">
+    <div ref={setNodeRef} style={style} className="rounded-2xl bg-surface-bright border border-outline-variant overflow-hidden transition-shadow hover:shadow-lg hover:shadow-black/5">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 pr-3">
         {/* Drag handle */}
         <button
           {...attributes}
           {...listeners}
-          className="text-slate-600 hover:text-slate-400 cursor-grab active:cursor-grabbing p-1 rounded"
+          className="text-on-surface-variant hover:text-on-surface cursor-grab active:cursor-grabbing p-1 rounded"
           aria-label="Drag to reorder"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -59,18 +59,18 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
         </button>
 
         {/* Stop number */}
-        <div className="w-9 h-9 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-sm font-bold shrink-0">
+        <div className="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm font-bold shrink-0">
           {index + 1}
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-white truncate">{stop.cityName}</h3>
+            <h3 className="font-semibold text-on-surface truncate">{stop.cityName}</h3>
             {stop.country && <Badge label={stop.country} variant="default" />}
           </div>
-          <div className="flex items-center gap-3 text-xs text-slate-400 mt-0.5">
+          <div className="flex items-center gap-3 text-xs text-on-surface-variant mt-0.5">
             {stop.arriveDate && <span>{formatDate(stop.arriveDate)} → {formatDate(stop.departDate)}</span>}
-            {totalCost > 0 && <span>{formatCurrency(totalCost)}</span>}
+            {totalCost > 0 && <span className="text-green-600 font-medium">{formatCurrency(totalCost)}</span>}
             <span>{stop.stopActivities.length} activities</span>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
           <Button variant="ghost" size="sm" onClick={() => setShowStopForm(!showStopForm)}>Edit</Button>
           <Button variant="danger" size="sm" onClick={handleDelete} isLoading={isPending}>Delete</Button>
           <button
-            className="p-2 text-slate-400 hover:text-white transition-colors"
+            className="p-2 text-on-surface-variant hover:text-primary transition-colors"
             onClick={() => setExpanded(!expanded)}
             aria-label={expanded ? 'Collapse' : 'Expand'}
           >
@@ -93,7 +93,7 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
 
       {/* Edit form */}
       {showStopForm && (
-        <div className="px-4 pb-4 border-t border-white/5 pt-4">
+        <div className="px-4 pb-4 border-t border-outline-variant pt-4">
           <StopForm
             tripId={tripId}
             existingStop={stop}
@@ -104,9 +104,9 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
 
         {/* Activities */}
       {expanded && (
-        <div className="border-t border-white/5">
+        <div className="border-t border-outline-variant">
           {stop.stopActivities.length > 0 ? (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-outline-variant">
               {stop.stopActivities.map((sa) => (
                 <ActivityCard
                   key={sa.id}
@@ -117,12 +117,12 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
               ))}
             </div>
           ) : (
-            <p className="px-4 py-3 text-sm text-slate-500">No activities yet.</p>
+            <p className="px-4 py-3 text-sm text-outline">No activities yet.</p>
           )}
 
           {/* Add activity */}
           {showActivityForm ? (
-            <div className="p-4 border-t border-white/5">
+            <div className="p-4 border-t border-outline-variant">
               <ActivityForm
                 tripId={tripId}
                 stopId={stop.id}

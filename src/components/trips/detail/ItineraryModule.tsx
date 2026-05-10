@@ -13,7 +13,7 @@ export function ItineraryModule({ stops, tripId }: ItineraryModuleProps) {
   return (
     <div className="relative">
       {/* Vertical Line */}
-      <div className="absolute left-[23px] top-8 bottom-8 w-[2px] bg-gradient-to-b from-orange-500/50 via-white/10 to-transparent" />
+      <div className="absolute left-[23px] top-8 bottom-8 w-[2px] bg-gradient-to-b from-primary/50 via-outline/30 to-transparent" />
 
       <div className="space-y-12">
         {stops.length > 0 ? stops.map((stop, index) => (
@@ -27,8 +27,8 @@ export function ItineraryModule({ stops, tripId }: ItineraryModuleProps) {
           >
             {/* Stop Point */}
             <div className="relative z-10">
-              <div className="w-12 h-12 rounded-2xl bg-[#1a1d2e] border-2 border-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
-                <span className="text-sm font-black text-white">{index + 1}</span>
+              <div className="w-12 h-12 rounded-2xl bg-surface-bright border-2 border-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                <span className="text-sm font-black text-on-surface">{index + 1}</span>
               </div>
             </div>
 
@@ -37,7 +37,7 @@ export function ItineraryModule({ stops, tripId }: ItineraryModuleProps) {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-2xl font-black text-white tracking-tight group-hover:text-orange-500 transition-colors">
+                    <h3 className="text-2xl font-black text-on-surface tracking-tight group-hover:text-primary transition-colors">
                       {stop.cityName}
                     </h3>
                     {index === 0 && (
@@ -46,12 +46,12 @@ export function ItineraryModule({ stops, tripId }: ItineraryModuleProps) {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-400 font-medium">{stop.country || 'Destination'}</p>
+                  <p className="text-sm text-on-surface-variant font-medium">{stop.country || 'Destination'}</p>
                 </div>
                 
-                <div className="flex items-center gap-4 text-xs font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                <div className="flex items-center gap-4 text-xs font-bold text-outline uppercase tracking-widest bg-surface-container px-4 py-2 rounded-full border border-outline-variant">
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-orange-500" />
+                    <Calendar className="w-3.5 h-3.5 text-primary" />
                     {stop.arriveDate ? formatDate(stop.arriveDate) : 'TBD'}
                   </div>
                   <ArrowRight className="w-3 h-3" />
@@ -61,32 +61,32 @@ export function ItineraryModule({ stops, tripId }: ItineraryModuleProps) {
 
               {/* Quick Info Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-6 rounded-[32px] bg-white/5 border border-white/5 hover:border-white/10 transition-all space-y-3">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
-                    <MapPin className="w-3 h-3 text-orange-500" />
+                <div className="p-6 rounded-[32px] bg-surface-container border border-outline-variant hover:border-primary/50 transition-all space-y-3">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-outline">
+                    <MapPin className="w-3 h-3 text-primary" />
                     Planned Activities
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {stop.stopActivities?.length > 0 ? stop.stopActivities.map((sa: any) => (
-                      <span key={sa.id} className="px-3 py-1 bg-white/5 rounded-lg text-xs text-white/70">
+                      <span key={sa.id} className="px-3 py-1 bg-surface-container border border-outline-variant rounded-lg text-xs text-on-surface-variant">
                         {sa.activity.name}
                       </span>
                     )) : (
-                      <span className="text-xs text-slate-600">No activities added yet</span>
+                      <span className="text-xs text-outline/80">No activities added yet</span>
                     )}
                   </div>
                 </div>
 
-                <div className="p-6 rounded-[32px] bg-white/5 border border-white/5 hover:border-white/10 transition-all space-y-3">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 text-orange-500">
+                <div className="p-6 rounded-[32px] bg-surface-container border border-outline-variant hover:border-primary/50 transition-all space-y-3">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
                     Budget Allocation
                   </div>
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="text-2xl font-black text-white">
+                      <p className="text-2xl font-black text-on-surface">
                         ₹{Number(stop.estimatedBudget || 0).toLocaleString()}
                       </p>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase">Estimated</p>
+                      <p className="text-[10px] text-outline font-bold uppercase">Estimated</p>
                     </div>
                   </div>
                 </div>
@@ -94,9 +94,9 @@ export function ItineraryModule({ stops, tripId }: ItineraryModuleProps) {
             </div>
           </motion.div>
         )) : (
-          <div className="text-center py-12 bg-white/5 rounded-[40px] border border-dashed border-white/10">
-            <p className="text-slate-500 font-medium">Your journey is a blank canvas. Start adding stops!</p>
-            <a href={`/trips/${tripId}/builder`} className="mt-4 inline-block text-orange-500 font-bold hover:underline">
+          <div className="text-center py-12 bg-surface-container rounded-[40px] border border-dashed border-outline">
+            <p className="text-outline font-medium">Your journey is a blank canvas. Start adding stops!</p>
+            <a href={`/trips/${tripId}/builder`} className="mt-4 inline-block text-primary font-bold hover:underline">
               Add your first stop
             </a>
           </div>

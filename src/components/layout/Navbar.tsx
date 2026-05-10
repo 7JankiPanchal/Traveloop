@@ -27,9 +27,9 @@ export function Navbar({ user }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  // Extract tripId from pathname if it exists
+  // Extract tripId from pathname if it exists and is not 'new'
   const tripMatch = pathname?.match(/\/trips\/([^\/]+)/)
-  const tripId = tripMatch ? tripMatch[1] : null
+  const tripId = tripMatch && tripMatch[1] !== 'new' ? tripMatch[1] : null
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,17 +57,17 @@ export function Navbar({ user }: NavbarProps) {
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled 
-          ? 'py-3 bg-[#030303]/80 backdrop-blur-2xl border-b border-white/5 shadow-2xl' 
+          ? 'py-3 bg-surface-bright/80 backdrop-blur-2xl border-b border-outline-variant shadow-2xl' 
           : 'py-6 bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-12">
             <a href="/" className="group flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                 <Compass className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-black tracking-tighter text-white">Traveloop</span>
+              <span className="text-2xl font-black tracking-tighter text-on-surface">Traveloop</span>
             </a>
 
             {/* Main Nav - Desktop */}
@@ -78,8 +78,8 @@ export function Navbar({ user }: NavbarProps) {
                   href={item.href}
                   className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                     pathname === item.href 
-                      ? 'text-white bg-white/10' 
-                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                      ? 'text-on-surface bg-surface-container' 
+                      : 'text-on-surface-variant hover:text-primary hover:bg-surface-container'
                   }`}
                 >
                   {item.label}
@@ -90,15 +90,15 @@ export function Navbar({ user }: NavbarProps) {
 
           {/* Context Nav - Trip Specific (Desktop) */}
           {tripId && (
-            <div className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 p-1 rounded-2xl backdrop-blur-md">
+            <div className="hidden lg:flex items-center gap-1 bg-surface-container border border-outline p-1 rounded-2xl backdrop-blur-md">
               {tripNavItems.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                     pathname === item.href 
-                      ? 'text-orange-500 bg-orange-500/10' 
-                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                      ? 'text-primary bg-primary/10' 
+                      : 'text-on-surface-variant hover:text-primary hover:bg-surface-container'
                   }`}
                 >
                   <item.icon className="w-3.5 h-3.5" />
@@ -116,27 +116,27 @@ export function Navbar({ user }: NavbarProps) {
                   href="/profile" 
                   className={`flex items-center gap-3 p-1 pr-4 rounded-full border transition-all ${
                     pathname === '/profile'
-                      ? 'border-orange-500/50 bg-orange-500/10'
-                      : 'border-white/10 bg-white/5 hover:border-white/20'
+                      ? 'border-primary/50 bg-primary/10'
+                      : 'border-outline bg-surface-container hover:border-primary/50'
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-white/10 border border-white/10">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container border border-outline">
                     {user.avatarUrl ? (
                       <img src={user.avatarUrl} alt={user.firstName} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">
+                      <div className="w-full h-full flex items-center justify-center text-xs font-bold text-outline">
                         {user.firstName?.[0]}
                       </div>
                     )}
                   </div>
-                  <span className="text-sm font-bold text-white hidden sm:block">{user.firstName}</span>
+                  <span className="text-sm font-bold text-on-surface hidden sm:block">{user.firstName}</span>
                 </a>
                 <div className="hidden sm:block">
                   <LogoutButton />
                 </div>
               </div>
             ) : (
-              <a href="/login" className="px-6 py-2 bg-white text-black font-bold rounded-xl hover:scale-105 active:scale-95 transition-all">
+              <a href="/login" className="px-6 py-2 bg-primary text-white font-bold rounded-xl hover:scale-105 active:scale-95 transition-all">
                 Sign In
               </a>
             )}
@@ -144,7 +144,7 @@ export function Navbar({ user }: NavbarProps) {
             {/* Mobile Menu Toggle */}
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
+              className="lg:hidden p-2 text-on-surface-variant hover:text-primary transition-colors"
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
             </button>
@@ -162,20 +162,20 @@ export function Navbar({ user }: NavbarProps) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-[#030303] pt-28 px-6 lg:hidden"
+            className="fixed inset-0 z-40 bg-surface-bright pt-28 px-6 lg:hidden"
           >
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-4">Menu</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-outline px-4">Menu</p>
                 <div className="flex flex-col gap-2">
                   {mainNavItems.map((item) => (
                     <a
                       key={item.label}
                       href={item.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-white/5 border border-white/5 text-lg font-bold"
+                      className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-surface-container border border-outline-variant text-lg font-bold text-on-surface"
                     >
-                      <item.icon className="w-5 h-5 text-orange-500" />
+                      <item.icon className="w-5 h-5 text-primary" />
                       {item.label}
                     </a>
                   ))}
@@ -184,16 +184,16 @@ export function Navbar({ user }: NavbarProps) {
 
               {tripId && (
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-4">Current Trip</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-outline px-4">Current Trip</p>
                   <div className="flex flex-col gap-2">
                     {tripNavItems.map((item) => (
                       <a
                         key={item.label}
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-white/5 border border-white/5 text-lg font-bold"
+                        className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-surface-container border border-outline-variant text-lg font-bold text-on-surface"
                       >
-                        <item.icon className="w-5 h-5 text-blue-500" />
+                        <item.icon className="w-5 h-5 text-primary" />
                         {item.label}
                       </a>
                     ))}
