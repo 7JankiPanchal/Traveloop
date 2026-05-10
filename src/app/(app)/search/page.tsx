@@ -10,7 +10,7 @@ export default function SearchPage() {
   const [selectedCity, setSelectedCity] = useState<CityResult | null>(null)
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-4xl mx-auto px-6 space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-white">Discover Destinations</h1>
         <p className="text-slate-400 text-sm mt-1">Search cities to add to your trip itinerary</p>

@@ -31,6 +31,7 @@ export async function createBudgetEntryAction(formData: FormData) {
   })
 
   revalidatePath(`/trips/${tripId}`)
+  revalidatePath('/trips')
 }
 
 export async function deleteBudgetEntryAction(entryId: string) {
@@ -50,4 +51,5 @@ export async function deleteBudgetEntryAction(entryId: string) {
   })
 
   revalidatePath(`/trips/${entry.tripId}`)
+  revalidatePath('/trips')
 }

@@ -6,6 +6,7 @@ import { TripHero } from '@/components/trips/detail/TripHero'
 import { BudgetModule } from '@/components/trips/detail/BudgetModule'
 import { ItineraryModule } from '@/components/trips/detail/ItineraryModule'
 import { NotesModule } from '@/components/trips/detail/NotesModule'
+import { PackingModule } from '@/components/trips/detail/PackingModule'
 
 interface TripPageProps {
   params: Promise<{ tripId: string }>
@@ -35,6 +36,9 @@ export default async function TripDetailPage({ params }: TripPageProps) {
         orderBy: { recordedAt: 'desc' }
       },
       noteItems: {
+        orderBy: { createdAt: 'desc' }
+      },
+      packingItems: {
         orderBy: { createdAt: 'desc' }
       }
     }
@@ -79,6 +83,11 @@ export default async function TripDetailPage({ params }: TripPageProps) {
               entries={serializedTrip.budgetEntries} 
               tripId={tripId} 
             />
+          </section>
+
+          <section id="packing">
+            <h2 className="text-3xl font-black tracking-tighter mb-8">Essentials</h2>
+            <PackingModule items={serializedTrip.packingItems} tripId={tripId} />
           </section>
         </div>
       </div>

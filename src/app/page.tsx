@@ -1,4 +1,4 @@
-import { TripsDashboardContent } from '@/components/trips/TripsDashboardContent'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getCurrentUser } from '@/lib/auth/getCurrentUser'
@@ -7,12 +7,9 @@ export default async function LandingPage() {
   const user = await getCurrentUser()
 
   if (user) {
-    return (
-      <div className="bg-[#0f1117] min-h-screen">
-        <TripsDashboardContent user={user} />
-      </div>
-    )
+    redirect('/trips')
   }
+
 
   return (
     <div className="relative min-h-screen w-full bg-[#030303] text-white overflow-hidden font-sans">

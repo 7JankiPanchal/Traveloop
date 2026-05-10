@@ -53,7 +53,7 @@ export default async function TripsDashboard() {
   const bannerImage = "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"
 
   return (
-    <div className="relative pb-24 space-y-12">
+    <div className="max-w-7xl mx-auto px-6 relative pb-24 space-y-12">
       {/* Header (Traveloop Logo & Profile handled by layout.tsx) */}
       
       {/* Banner Image */}
