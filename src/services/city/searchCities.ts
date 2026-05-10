@@ -33,7 +33,6 @@ export async function searchCities(query: string): Promise<CityResult[]> {
       }
     })
   } catch (error) {
-    console.error('City search error:', error)
-    return []
+        return []
   }
 }

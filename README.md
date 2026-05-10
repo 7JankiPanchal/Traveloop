@@ -1,262 +1,178 @@
-# Traveloop
+<div align="center">
+  <h1>🌍 Traveloop</h1>
+  <p><strong>Personalized Travel Planning Made Easy</strong></p>
 
-## What is Traveloop?
+  <!-- Badges -->
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+    <img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Prisma-7.0-2D3748?style=for-the-badge&logo=prisma" alt="Prisma" />
+    <img src="https://img.shields.io/badge/PostgreSQL-Neon-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
+  </p>
 
-Traveloop is a travel itinerary planning platform that helps you plan multi-city trips from start to finish. Instead of juggling spreadsheets and scattered notes, you get one place to organize everything — your cities, daily activities, budgets, and timelines.
-
-### What you can do
-
-- **Create trips** — set a title, date range, and overall budget for each journey.
-- **Add cities/stops** — build your route by adding the cities you want to visit, in order. Search from a worldwide city database and drag-and-drop to reorder.
-- **Plan activities** — within each city, add things to do — tours, restaurants, landmarks, adventures. Each activity tracks its estimated cost, duration, and category.
-- **View your itinerary** — switch to a read-only timeline view that groups everything by city, shows day-by-day breakdowns, and totals up your costs. Filter by city, category, or search for specific activities.
-- **Search destinations** — discover cities and activities through a dedicated search page. Find a place, then add it straight to your trip.
-- **Track budgets** — see estimated costs at the stop level and trip level, with visual breakdowns.
-- **Account system** — sign up, log in, and keep your trips private. Each trip belongs to its creator.
-
-### Who is it for?
-
-Solo travelers, friend groups, or anyone who wants a clean, organized way to plan a trip without the chaos of shared Google Docs.
+  <p>
+    <a href="#-problem-statement">Problem Statement</a> •
+    <a href="#-key-features">Features</a> •
+    <a href="#-tech-stack">Tech Stack</a> •
+    <a href="#%EF%B8%8F-database-schema">Architecture & DB</a> •
+    <a href="#-getting-started">Getting Started</a>
+  </p>
+</div>
 
 ---
 
-## Tech Stack
+## 🌟 Overall Vision & Mission
 
-| Layer | Technology |
+> **Vision:** To become a personalized, intelligent, and collaborative platform that transforms the way individuals plan and experience travel. We aim to empower users to dream, design, and organize trips with ease, combining flexibility and interactivity.
+
+> **Mission:** To build a user-centric, responsive application that simplifies the complexity of planning multi-city travel. We provide travelers with intuitive tools to manage stops, explore activities, estimate budgets, visualize timelines, and seamlessly share plans.
+
+---
+
+## 💡 Problem Statement
+
+Organizing a multi-city journey often involves juggling scattered spreadsheets, shared documents, and disconnected booking references. **Traveloop** solves this by providing a unified, end-to-end travel planning application.
+
+Users can create customized multi-city itineraries, assign travel dates, activities, and budgets, discover destinations through an integrated search, receive automated cost breakdowns, and share their itineraries publicly or with friends. The platform leverages a robust relational database to handle complex travel data, ensuring dynamic, highly responsive user interfaces that adapt to each user's unique trip flow.
+
+---
+
+## ✨ Key Features
+
+Traveloop is packed with comprehensive features tailored for the ultimate travel planning experience:
+
+### 🔐 User & Community
+- **Authentication**: Secure Login / Signup screen to manage personal travel plans.
+- **User Profile**: Personalized settings to update information, preferences, and view saved destinations.
+- **Dashboard**: A central hub showing upcoming trips, recommended destinations, and budget highlights.
+- **Shared Itineraries**: Generate public, read-only URLs to share your travel plans. Visitors can even "Copy Trip" for inspiration.
+
+### 🗺️ Trip Planning & Discovery
+- **Create Trip**: Initialize a new journey with dates, descriptions, and cover photos.
+- **City Search**: Integrated search to discover and add cities, displaying country info, cost indexes, and popularity.
+- **Activity Search**: Browse curated things-to-do for each stop, filterable by interest, cost, and duration.
+- **My Trips**: Dedicated list view of all created journeys with at-a-glance summaries.
+
+### 📅 Organization & Logistics
+- **Itinerary Builder**: Interactive drag-and-drop interface to add cities, allocate dates, and assign specific activities to each stop.
+- **Timeline View**: Visual, day-by-day representation of the completed trip with activity blocks, times, and costs.
+- **Trip Notes / Journal**: Contextual note-taking for storing hotel check-ins, local contacts, or day-specific reminders.
+- **Packing Checklist**: A reusable, categorized per-trip checklist to ensure nothing is forgotten.
+
+### 💰 Finance & Analytics
+- **Budget & Cost Breakdown**: Automated financial summaries displaying total estimated costs, segmented by transport, stay, activities, and meals with intuitive charts.
+- **Admin Dashboard**: Analytics interface to track platform usage, user trends, top destinations, and engagement stats.
+
+---
+
+## 🛠 Tech Stack
+
+Our application is built on a modern, bleeding-edge web stack designed for performance, type safety, and scalability.
+
+| Category | Technology | Description |
+|---|---|---|
+| **Frontend Framework** | **Next.js 16** | App Router, Turbopack, React Server Components |
+| **Language** | **TypeScript 5** | Strict end-to-end type safety |
+| **Styling** | **Tailwind CSS v4** | Utility-first CSS for rapid UI development |
+| **Database** | **PostgreSQL (Neon)** | Serverless, highly scalable Postgres |
+| **ORM** | **Prisma 7** | Type-safe database client (`@prisma/adapter-neon`) |
+| **Authentication** | **PASETO v4** | Highly secure, stateless token authentication |
+| **State & Forms** | **React Hook Form + Zod** | Robust form validation and state management |
+| **Interactivity** | **@dnd-kit / Recharts** | Accessible drag-and-drop & dynamic data visualization |
+
+---
+
+## 🏗️ Architecture
+
+Traveloop uses a modular, layered architecture separating UI components, Server Actions, Services, and the ORM layer.
+- **Design Rule:** Prisma queries are completely isolated from React components. All mutations flow through secure Server Actions with strict authentication boundaries.
+
+---
+
+## 🗄️ Database Schema
+
+The relational database is meticulously structured to efficiently handle multi-layered, multi-city travel plans.
+
+```mermaid
+erDiagram
+    User ||--o{ Trip : creates
+    User ||--o{ SavedDestination : saves
+    Trip ||--o{ Stop : contains
+    Trip ||--o{ BudgetEntry : tracks
+    Trip ||--o{ PackingItem : requires
+    Trip ||--o{ Note : has
+    City ||--o{ Stop : "visited as"
+    City ||--o{ Activity : offers
+    Stop ||--o{ StopActivity : schedules
+    Activity ||--o{ StopActivity : "included in"
+```
+
+### Core Data Models
+
+| Model | Description |
 |---|---|
-| Framework | Next.js 16 (App Router + Turbopack) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS v4 |
-| ORM | Prisma 7 |
-| Database | PostgreSQL (Neon serverless) |
-| DB Adapter | `@prisma/adapter-neon` |
-| Forms | React Hook Form + Zod |
-| Drag & Drop | `@dnd-kit` |
-| Auth | PASETO v4 tokens |
-| Charts | Recharts |
+| **`User`** | Platform users with authentication details and preferences. |
+| **`Trip`** | The primary container holding budget limits, date ranges, and sharing settings. |
+| **`Stop`** | A specific destination within a trip, maintaining chronological order via `sortOrder`. |
+| **`Activity`** | Reusable points of interest or experiences associated with a `City`. |
+| **`StopActivity`** | Junction table mapping `Activity` records to a `Stop`, including scheduled times and cost overrides. |
+| **`City`** | Global destination metadata including cost indexes and cover photos. |
+
+### Auxiliary Models
+
+| Model | Description |
+|---|---|
+| **`BudgetEntry`** | Explicit expense tracking entries categorized by transport, accommodation, etc. |
+| **`PackingItem`** | Checklist items for a trip with packed status toggles. |
+| **`Note`** | Free-form journal entries or reminders linked to a trip or specific stop. |
+| **`SavedDestination`**| Cities bookmarked by a user for future inspiration. |
+
+*Mockup Reference: [Excalidraw Design File](https://link.excalidraw.com/l/65VNwvy7c4X/22o30WE3bE4)*
 
 ---
 
-## Prerequisites
+## 🚀 Getting Started
 
+Follow these steps to run the project locally.
+
+### 1. Prerequisites
 - **Node.js** 18+
-- **npm**
-- A [Neon](https://neon.tech) PostgreSQL database
+- **npm** (or pnpm/yarn)
+- A **Neon PostgreSQL** database instance.
 
----
-
-## Getting Started
-
-### 1. Clone the repository
-
+### 2. Clone & Install
 ```bash
 git clone https://github.com/7JankiPanchal/Traveloop.git
 cd Traveloop
-```
-
-### 2. Install dependencies
-
-```bash
 npm install
 ```
+*(Note: `npm install` runs `prisma generate` automatically via the `postinstall` script.)*
 
-> This also runs `prisma generate` automatically via the `postinstall` script.
-
-### 3. Set up environment variables
-
+### 3. Environment Variables
 Create a `.env` file in the project root:
-
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@HOST/DBNAME?sslmode=require"
 PASETO_PRIVATE_KEY="<base64-encoded-ed25519-private-key>"
 PASETO_PUBLIC_KEY="<base64-encoded-ed25519-public-key>"
 ```
 
-> Get your database connection string from the [Neon dashboard](https://console.neon.tech).
-
-### 4. Apply database migrations
-
+### 4. Database Setup
+Apply migrations to construct the database schema:
 ```bash
 npx prisma migrate dev
 ```
 
-This creates all tables in your Neon database.
-
-### 5. (Optional) Open Prisma Studio
-
-```bash
-npx prisma studio
-```
-
-### 6. Start the development server
-
+### 5. Run Development Server
+Start the Turbopack development server:
 ```bash
 npm run dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── (app)/                          # Authenticated route group
-│   │   ├── trips/page.tsx              # Trip list
-│   │   ├── trips/[tripId]/builder/     # Itinerary Builder (write layer)
-│   │   ├── trips/[tripId]/view/        # Itinerary View (read layer)
-│   │   └── search/                     # City & Activity Search (discovery layer)
-│   ├── api/auth/                       # Auth API routes (login, signup)
-│   ├── login/                          # Login page
-│   ├── signup/                         # Signup page
-│   ├── layout.tsx                      # Root layout
-│   └── page.tsx                        # Landing / budget overview
-├── actions/
-│   ├── trip/                           # createTrip, deleteTrip
-│   ├── stop/                           # createStop, updateStop, deleteStop, reorderStops
-│   ├── activity/                       # createActivity, updateActivity, deleteActivity, assignActivity
-│   └── search/                         # searchCitiesAction, searchActivitiesAction
-├── components/
-│   ├── itinerary/                      # StopList, StopCard, StopForm, ActivityCard, ActivityForm, etc.
-│   ├── city-search/                    # CitySearchInput (autocomplete dropdown)
-│   ├── budget/                         # BudgetSummaryCard, ExpenseBreakdownChart, DailyExpenseBarChart
-│   ├── trips/                          # Trip list components
-│   └── ui/                            # Button, Badge, Skeleton, EmptyState
-├── services/
-│   ├── itinerary/                      # getItinerary, transformItinerary
-│   ├── city/                           # searchCities (Nominatim / OpenStreetMap API)
-│   └── activity/                       # searchActivities (local DB)
-├── lib/
-│   ├── auth/getCurrentUser.ts          # Auth abstraction layer
-│   ├── auth.ts                         # PASETO token sign/verify utilities
-│   ├── validations/                    # Zod schemas (trip, stop, activity)
-│   ├── generated/prisma/              # Auto-generated Prisma client
-│   ├── prisma.ts                       # Prisma singleton with Neon adapter
-│   └── utils.ts                        # formatDate, formatCurrency, serialize
-├── hooks/                              # useDebounce, useCitySearch, useActivitySearch
-├── data/                               # Static mock data (budget)
-├── styles/                             # Additional styles
-└── types/                              # Shared TypeScript types (auth, city, itinerary)
-```
+Navigate to [http://localhost:3000](http://localhost:3000) to explore the application.
 
 ---
 
-## Architecture
-
-The project follows a layered architecture to keep concerns separated:
-
-```
-UI Components (React)
-  → Server Actions (src/actions/)
-    → Services (src/services/)
-      → Prisma ORM (src/lib/prisma.ts)
-        → PostgreSQL (Neon)
-```
-
-**Design rules:**
-- Prisma queries never appear inside React components.
-- All mutations go through Server Actions with auth validation via `requireUser()`.
-- Reusable business logic lives in the services layer.
-- Search is public; all write operations require authentication.
-- The auth provider is abstracted — features import from `lib/auth/getCurrentUser.ts`, never from any auth SDK directly.
-
----
-
-## Database Schema
-
-Defined in `prisma/schema.prisma`. Models:
-
-| Model | Description |
-|---|---|
-| `User` | Platform users with email/password auth |
-| `Trip` | A user's trip with dates, budget, and optional share token |
-| `Stop` | A city/stop within a trip, ordered via `sortOrder` |
-| `Activity` | A reusable activity record tied to a city |
-| `StopActivity` | Junction table: an activity scheduled within a specific stop |
-| `City` | City metadata (name, country, cost index, popularity) |
-| `Note` | Free-form notes attached to a trip or stop |
-| `BudgetEntry` | Budget tracking entries by category |
-| `PackingItem` | Packing checklist items |
-| `SavedDestination` | User's bookmarked cities |
-
-### Key relationships
-
-- A **User** has many **Trips**.
-- A **Trip** has many **Stops** (ordered).
-- A **Stop** belongs to a **City** and has many **StopActivities**.
-- An **Activity** belongs to a **City** and can be assigned to multiple stops.
-
-### Prisma commands
-
-```bash
-npx prisma migrate dev --name <migration-name>   # Apply schema changes
-npx prisma generate                               # Regenerate client
-npx prisma migrate reset                           # Reset DB (drops all data)
-npx prisma studio                                  # Visual DB browser
-```
-
----
-
-## Auth
-
-Auth uses **PASETO v4 tokens** through an internal abstraction layer.
-
-```ts
-import { getCurrentUser } from '@/lib/auth/getCurrentUser'
-import { requireUser } from '@/lib/auth/getCurrentUser'
-
-const user = await getCurrentUser()   // returns AuthUser | null
-const user = await requireUser()      // throws if not authenticated
-```
-
-In development (`NODE_ENV=development`), a mock user is returned automatically so all features work without a real auth session.
-
----
-
-## Routes
-
-| Route | Description |
-|---|---|
-| `/` | Landing page / budget overview |
-| `/login` | Login page |
-| `/signup` | Signup page |
-| `/trips` | List of your trips |
-| `/trips/[tripId]/builder` | Drag-and-drop itinerary builder |
-| `/trips/[tripId]/view` | Read-only timeline view with filters |
-| `/search` | City and activity discovery |
-| `/api/auth/login` | POST — login with email/password |
-| `/api/auth/signup` | POST — register new user |
-
----
-
-## Scripts
-
-```bash
-npm run dev          # Start development server (Turbopack)
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-```
-
----
-
-## Future Modules
-
-The architecture is designed to support:
-
-- Budget analytics dashboard
-- Packing checklist UI
-- Public trip sharing via share tokens
-- Notes / travel journal
-- AI-powered recommendations
-- Collaborative editing
-- Admin analytics
-- Saved destinations management
-
----
-
-## License
-
-[MIT](./LICENSE)
+<div align="center">
+  <p>Built with ❤️ for travelers everywhere.</p>
+  <p>Licensed under <a href="./LICENSE">MIT</a></p>
+</div>

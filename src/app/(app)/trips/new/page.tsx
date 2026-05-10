@@ -35,8 +35,7 @@ export default function CreateTripPage() {
     try {
       await createTripAction(formData)
     } catch (error) {
-      console.error('Failed to create trip', error)
-      setIsPending(false)
+            setIsPending(false)
     }
   }
 

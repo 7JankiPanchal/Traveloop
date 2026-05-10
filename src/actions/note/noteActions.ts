@@ -26,9 +26,7 @@ export async function createNoteAction(formData: FormData) {
     }
   })
 
-  revalidatePath(`/trips/${tripId}`)
   revalidatePath(`/trips/${tripId}/notes`)
-  revalidatePath('/trips')
 }
 
 export async function updateNoteAction(noteId: string, body: string) {
@@ -63,7 +61,5 @@ export async function deleteNoteAction(noteId: string) {
     where: { id: noteId }
   })
 
-  revalidatePath(`/trips/${note.tripId}`)
   revalidatePath(`/trips/${note.tripId}/notes`)
-  revalidatePath('/trips')
 }

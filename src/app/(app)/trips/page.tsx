@@ -46,15 +46,15 @@ export default async function TripsDashboard() {
   now.setHours(0, 0, 0, 0) // Normalize to start of day
 
   // Categorize Trips
-  const ongoingTrips = userTrips.filter(t =>
+  const ongoingTrips = userTrips.filter(t => 
     t.startDate && t.endDate && t.startDate <= now && t.endDate >= now
   )
-
-  const upcomingTrips = userTrips.filter(t =>
+  
+  const upcomingTrips = userTrips.filter(t => 
     !t.startDate || t.startDate > now
   )
-
-  const completedTrips = userTrips.filter(t =>
+  
+  const completedTrips = userTrips.filter(t => 
     t.endDate && t.endDate < now
   )
 
@@ -78,9 +78,9 @@ export default async function TripsDashboard() {
         </Link>
       </div>
 
-      <Banner
-        image={bannerImage}
-        title="Explore the World"
+      <Banner 
+        image={bannerImage} 
+        title="Explore the World" 
         subtitle="Discover hidden gems and plan your next big adventure"
       />
 
@@ -143,8 +143,8 @@ export default async function TripsDashboard() {
 
       {userTrips.length === 0 && (
         <section className="space-y-6">
-          <EmptyState
-            title="No trips planned yet"
+          <EmptyState 
+            title="No trips planned yet" 
             description="Start by exploring destinations or creating your first adventure."
           />
         </section>
@@ -155,7 +155,7 @@ export default async function TripsDashboard() {
           <h2 className="text-xl font-bold text-white whitespace-nowrap">Top Regional Selections</h2>
           <div className="h-[1px] w-full bg-white/10" />
         </div>
-
+        
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-8 px-8">
           {cities.map((city: any) => (
             <CityCardSmall key={city.id} city={city} />

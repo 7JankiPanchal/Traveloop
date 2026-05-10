@@ -9,7 +9,7 @@ export default async function SearchPage() {
 
   if (user) {
     const rawTrips = await prisma.trip.findMany({
-      where: {
+      where: { 
         userId: user.id,
         // Optional: only fetch trips that haven't ended yet
         // OR: [
@@ -23,7 +23,7 @@ export default async function SearchPage() {
         title: true,
       }
     })
-
+    
     trips = rawTrips
   }
 

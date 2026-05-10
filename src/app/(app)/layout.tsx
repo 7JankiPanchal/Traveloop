@@ -1,22 +1,31 @@
 import type { Metadata } from 'next'
 import { getCurrentUser } from '@/lib/auth/getCurrentUser'
-import { Navbar } from '@/components/layout/Navbar'
+import { AppNavbar } from '@/components/layout/AppNavbar'
 
 export const metadata: Metadata = {
-  title: 'Traveloop',
-  description: 'Plan your perfect multi-city trip',
+  title: 'Traveloop — Personalized Travel Planning',
+  description:
+    'Plan your perfect multi-city trip with itinerary builder, budget tracker, packing lists, and community sharing.',
 }
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
 
+  const navUser = user
+    ? {
+        id: user.id,
+        firstName: user.firstName ?? null,
+        email: user.email,
+        avatarUrl: user.avatarUrl ?? null,
+      }
+    : null
+
   return (
-    <div className="min-h-screen bg-[#030303] text-white">
-      <Navbar user={user} />
-      <main className="w-full">
+    <div style={{ minHeight: '100vh', background: '#0f1117', color: '#f1f5f9' }}>
+      {navUser && <AppNavbar user={navUser} />}
+      <main style={{ paddingTop: navUser ? 56 : 0, minHeight: '100vh' }}>
         {children}
       </main>
     </div>
   )
 }
-

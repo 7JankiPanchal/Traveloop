@@ -29,8 +29,7 @@ export function BudgetModule({ budgetLimit, entries, tripId }: BudgetModuleProps
         await createBudgetEntryAction(formData)
         setShowAdd(false)
       } catch (err) {
-        console.error(err)
-        alert('Failed to add expense')
+                alert('Failed to add expense')
       }
     })
   }
@@ -41,8 +40,7 @@ export function BudgetModule({ budgetLimit, entries, tripId }: BudgetModuleProps
       try {
         await deleteBudgetEntryAction(id)
       } catch (err) {
-        console.error(err)
-        alert('Failed to delete expense')
+                alert('Failed to delete expense')
       }
     })
   }

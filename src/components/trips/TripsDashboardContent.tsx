@@ -26,8 +26,7 @@ export function TripsDashboardContent({ user }: Props) {
         const json = await res.json()
         setData(json)
       } catch (err) {
-        console.error('Failed to fetch dashboard data', err)
-      } finally {
+              } finally {
         setLoading(false)
       }
     }

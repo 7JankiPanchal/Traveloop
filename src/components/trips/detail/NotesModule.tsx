@@ -26,8 +26,7 @@ export function NotesModule({ notes, tripId }: NotesModuleProps) {
         await createNoteAction(formData)
         setShowAdd(false)
       } catch (err) {
-        console.error(err)
-        alert('Failed to save note')
+                alert('Failed to save note')
       }
     })
   }
@@ -38,8 +37,7 @@ export function NotesModule({ notes, tripId }: NotesModuleProps) {
       try {
         await deleteNoteAction(id)
       } catch (err) {
-        console.error(err)
-        alert('Failed to delete note')
+                alert('Failed to delete note')
       }
     })
   }

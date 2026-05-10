@@ -18,8 +18,7 @@ export async function addPackingItem(tripId: string, label: string, category: st
     revalidatePath('/trips')
     return { success: true, item }
   } catch (error) {
-    console.error('Error adding packing item:', error)
-    return { success: false, error: 'Failed to add item' }
+        return { success: false, error: 'Failed to add item' }
   }
 }
 
@@ -34,8 +33,7 @@ export async function togglePackingItem(tripId: string, itemId: string, isPacked
     revalidatePath('/trips')
     return { success: true }
   } catch (error) {
-    console.error('Error toggling packing item:', error)
-    return { success: false, error: 'Failed to update item' }
+        return { success: false, error: 'Failed to update item' }
   }
 }
 
@@ -49,7 +47,6 @@ export async function deletePackingItem(tripId: string, itemId: string) {
     revalidatePath('/trips')
     return { success: true }
   } catch (error) {
-    console.error('Error deleting packing item:', error)
-    return { success: false, error: 'Failed to delete item' }
+        return { success: false, error: 'Failed to delete item' }
   }
 }

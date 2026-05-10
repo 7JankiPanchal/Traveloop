@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/lib/generated/prisma"
 }
 
@@ -19,10 +19,12 @@ model User {
   additionalInfo String?            @map("additional_info")
   avatarUrl      String?            @map("avatar_url")
   language       String             @default("en")
+  isAdmin        Boolean            @default(false) @map("is_admin")
   createdAt      DateTime           @default(now()) @map("created_at")
   updatedAt      DateTime           @default(now()) @updatedAt @map("updated_at")
   trips          Trip[]
   savedCities    SavedDestination[]
+  communityPosts CommunityPost[]
 
   @@map("users")
 }
@@ -165,4 +167,17 @@ model SavedDestination {
 
   @@unique([userId, cityId])
   @@map("saved_destinations")
+}
+
+model CommunityPost {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  content   String   @db.Text
+  imageUrl  String?  @map("image_url")
+  location  String?
+  createdAt DateTime @default(now()) @map("created_at")
+  likes     Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("community_posts")
 }

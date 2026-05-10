@@ -23,8 +23,7 @@ export async function GET() {
 
   } catch (error) {
 
-    console.log(error);
-
+    
     return NextResponse.json(
       {
         message: "Failed to fetch itineraries",
@@ -76,8 +75,7 @@ export async function POST(req: Request) {
 
   } catch (error) {
 
-    console.log(error);
-
+    
     return NextResponse.json(
       {
         message: "Failed to create itinerary",
