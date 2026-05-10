@@ -16,7 +16,7 @@ model User {
   phoneNumber    String?            @map("phone_number")
   city           String?            @map("city")
   country        String?            @map("country")
-  additionalInfo String?          @map("additional_info")
+  additionalInfo String?            @map("additional_info")
   avatarUrl      String?            @map("avatar_url")
   language       String             @default("en")
   createdAt      DateTime           @default(now()) @map("created_at")
@@ -28,17 +28,17 @@ model User {
 }
 
 model City {
-  id              String             @id @default(uuid())
+  id              String   @id @default(uuid())
   name            String
   country         String
   region          String?
-  costIndex       Decimal?           @map("cost_index") @db.Decimal(5, 2)
-  popularityScore Int                @default(0) @map("popularity_score")
-  coverPhotoUrl   String?            @map("cover_photo_url")
+  costIndex       Decimal? @map("cost_index") @db.Decimal(5, 2)
+  popularityScore Int      @default(0) @map("popularity_score")
+  coverPhotoUrl   String?  @map("cover_photo_url")
 
-  activities      Activity[]
-  savedByUsers    SavedDestination[]
-  stops           Stop[]
+  activities   Activity[]
+  savedByUsers SavedDestination[]
+  stops        Stop[]
 
   @@map("cities")
 }
@@ -66,22 +66,22 @@ model Trip {
 }
 
 model Stop {
-  id             String         @id @default(uuid())
-  tripId         String         @map("trip_id")
-  cityId         String?        @map("city_id")
-  sortOrder      Int            @map("sort_order")
-  arriveDate     DateTime?      @map("arrive_date") @db.Date
-  departDate     DateTime?      @map("depart_date") @db.Date
-  createdAt      DateTime       @default(now()) @map("created_at")
-  cityName       String         @map("city_name")
-  country        String?
-  estimatedBudget Decimal?      @map("estimated_budget") @db.Decimal(10, 2)
-  updatedAt      DateTime       @default(now()) @updatedAt @map("updated_at")
-  budgetEntries  BudgetEntry[]
-  noteItems      Note[]
-  stopActivities StopActivity[]
-  city           City?          @relation(fields: [cityId], references: [id])
-  trip           Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  id              String         @id @default(uuid())
+  tripId          String         @map("trip_id")
+  cityId          String?        @map("city_id")
+  sortOrder       Int            @map("sort_order")
+  arriveDate      DateTime?      @map("arrive_date") @db.Date
+  departDate      DateTime?      @map("depart_date") @db.Date
+  createdAt       DateTime       @default(now()) @map("created_at")
+  cityName        String         @map("city_name")
+  country         String?
+  estimatedBudget Decimal?       @map("estimated_budget") @db.Decimal(10, 2)
+  updatedAt       DateTime       @default(now()) @updatedAt @map("updated_at")
+  budgetEntries   BudgetEntry[]
+  noteItems       Note[]
+  stopActivities  StopActivity[]
+  city            City?          @relation(fields: [cityId], references: [id])
+  trip            Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@unique([tripId, sortOrder])
   @@map("stops")
