@@ -1,8 +1,8 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 interface AppNavbarProps {
   user: {
@@ -13,157 +13,119 @@ interface AppNavbarProps {
   }
 }
 
-// Fixed top header for app pages
 export function AppNavbar({ user }: AppNavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const navLinks = [
+  const menuLinks = [
     { href: '/trips', label: 'My Trips' },
-    { href: '/search', label: 'Discover' },
-    { href: '/communityTab', label: 'Community' },
+    { href: '/trips/new', label: 'Plan a Trip' },
+    { href: '/search', label: 'Discover Cities' },
+    { href: '/community', label: 'Community' },
+    { href: '/profile', label: 'Profile' },
   ]
 
-  const initial = (user.firstName?.[0] || user.email[0]).toUpperCase()
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+    router.refresh()
+  }
 
   return (
-    <header
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        background: 'rgba(15, 17, 23, 0.92)',
-        backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1280,
-          margin: '0 auto',
-          padding: '0 24px',
-          height: 56,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 16,
-        }}
-      >
-        {/* Logo */}
-        <Link
-          href="/trips"
-          style={{
-            textDecoration: 'none',
-            fontSize: 20,
-            fontWeight: 800,
-            color: '#f97316',
-            letterSpacing: '-0.5px',
-            flexShrink: 0,
-          }}
-        >
-          Traveloop
-        </Link>
+    <>
+      <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm transition-all duration-300">
+        <div className="flex justify-between items-center px-5 h-16 w-full max-w-screen-xl mx-auto">
+          {/* Hamburger */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="text-primary hover:opacity-70 transition-opacity"
+            aria-label="Open menu"
+          >
+            <span className="material-symbols-outlined">menu</span>
+          </button>
 
-        {/* Desktop Nav */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="hidden-mobile">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              style={{
-                textDecoration: 'none',
-                padding: '6px 14px',
-                borderRadius: 10,
-                fontSize: 13,
-                fontWeight: 500,
-                color: pathname === link.href ? '#fff' : 'rgba(255,255,255,0.5)',
-                background: pathname === link.href ? 'rgba(255,255,255,0.08)' : 'transparent',
-                transition: 'all 0.15s',
-              }}
-            >
-              {link.label}
+          {/* Centered Logo */}
+          <Link
+            href="/trips"
+            className="absolute left-1/2 -translate-x-1/2 font-display text-xl tracking-tighter text-primary font-bold no-underline"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            TRAVELOOP
+          </Link>
+
+          {/* Right: Search + Avatar */}
+          <div className="flex items-center gap-3">
+            <Link href="/search" className="text-primary hover:opacity-70 transition-opacity" aria-label="Search">
+              <span className="material-symbols-outlined">search</span>
             </Link>
-          ))}
-        </nav>
-
-        {/* Right: User */}
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {pathname === '/trips' && (
-              <Link
-                href="/trips/new"
-                style={{
-                  textDecoration: 'none',
-                  padding: '6px 16px',
-                  background: '#f97316',
-                  color: '#fff',
-                  borderRadius: 10,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  transition: 'background 0.15s',
-                }}
-                className="hidden-mobile"
-              >
-                Plan Trip
-              </Link>
-            )}
-            <Link href="/profile" style={{ textDecoration: 'none' }}>
+            <Link href="/profile" aria-label="Profile">
               <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
-                  backgroundColor: '#1e293b',
-                  border: '2px solid rgba(249,115,22,0.4)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#f97316',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                }}
+                className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary/30 flex items-center justify-center text-primary font-bold text-sm"
+                style={{ background: '#ffdbd1' }}
               >
                 {user.avatarUrl ? (
-                  <img
-                    src={user.avatarUrl}
-                    alt={user.firstName ?? 'User'}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
+                  <img src={user.avatarUrl} alt={user.firstName ?? 'User'} className="w-full h-full object-cover" />
                 ) : (
-                  initial
+                  (user.firstName?.[0] || user.email[0]).toUpperCase()
                 )}
               </div>
             </Link>
           </div>
-        ) : (
-          <Link
-            href="/login"
-            style={{
-              textDecoration: 'none',
-              padding: '6px 16px',
-              background: '#f97316',
-              color: '#fff',
-              borderRadius: 10,
-              fontSize: 13,
-              fontWeight: 600,
-            }}
-          >
-            Sign In
-          </Link>
-        )}
-      </div>
+        </div>
+      </header>
 
-      <style>{`
-        @media (max-width: 640px) {
-          .hidden-mobile { display: none !important; }
-        }
-      `}</style>
-    </header>
+      {/* Slide-in Drawer */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[100] flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-on-surface/40"
+            onClick={() => setMenuOpen(false)}
+          />
+          {/* Drawer */}
+          <div
+            className="relative w-72 h-full bg-surface-container-low shadow-2xl flex flex-col py-12 px-8"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="absolute top-5 right-5 text-on-surface-variant hover:text-primary transition-colors"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+            <p className="text-xl font-bold text-primary mb-1">TRAVELOOP</p>
+            <p className="text-sm text-on-surface-variant mb-8" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              Welcome, {user.firstName || user.email.split('@')[0]}
+            </p>
+            <nav className="flex flex-col gap-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              {menuLinks.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg text-sm font-semibold transition-colors no-underline ${
+                    pathname === href
+                      ? 'bg-primary text-on-primary'
+                      : 'text-on-surface-variant hover:bg-surface-container-high hover:text-primary'
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+            <div className="mt-auto">
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-3 rounded-lg text-sm font-semibold text-error hover:bg-error-container transition-colors"
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

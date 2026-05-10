@@ -13,11 +13,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const navUser = user
     ? {
-        id: user.id,
-        firstName: user.firstName ?? null,
-        email: user.email,
-        avatarUrl: user.avatarUrl ?? null,
-      }
+      id: user.id,
+      firstName: user.firstName ?? null,
+      email: user.email,
+      avatarUrl: user.avatarUrl ?? null,
+    }
     : null
 
   return (
