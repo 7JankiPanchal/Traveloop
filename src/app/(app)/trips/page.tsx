@@ -36,10 +36,10 @@ export default async function TripsDashboard() {
         </div>
 
         <form action={createTripAction} className="flex gap-2">
-          <input 
-            name="title" 
-            placeholder="e.g. Summer in Tokyo" 
-            required 
+          <input
+            name="title"
+            placeholder="e.g. Summer in Tokyo"
+            required
             className="h-10 bg-white/5 border border-white/10 rounded-xl px-4 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
           />
           <Button type="submit">Create New Trip</Button>
@@ -47,10 +47,10 @@ export default async function TripsDashboard() {
       </div>
 
       {trips.length === 0 ? (
-        <EmptyState 
-          icon="✈️" 
-          title="No trips yet" 
-          description="Create your first trip above to start planning!" 
+        <EmptyState
+          icon="✈️"
+          title="No trips yet"
+          description="Create your first trip above to start planning!"
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
