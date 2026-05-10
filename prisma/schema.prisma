@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/lib/generated/prisma"
 }
 
 datasource db {
@@ -7,36 +8,37 @@ datasource db {
 }
 
 model User {
-  id           String             @id @default(uuid())
-  email        String             @unique
-  passwordHash String             @map("password_hash")
-  firstName    String?            @map("first_name")
-  lastName     String?            @map("last_name")
-  phoneNumber  String?            @map("phone_number")
-  city         String?            @map("city")
-  country      String?            @map("country")
-  additionalInfo String?          @map("additional_info")
-  avatarUrl    String?            @map("avatar_url")
-  language     String             @default("en")
-  createdAt    DateTime           @default(now()) @map("created_at")
-  updatedAt    DateTime           @default(now()) @updatedAt @map("updated_at")
-  trips        Trip[]
-  savedCities  SavedDestination[]
+  id             String             @id @default(uuid())
+  email          String             @unique
+  passwordHash   String             @map("password_hash")
+  firstName      String?            @map("first_name")
+  lastName       String?            @map("last_name")
+  phoneNumber    String?            @map("phone_number")
+  city           String?            @map("city")
+  country        String?            @map("country")
+  additionalInfo String?            @map("additional_info")
+  avatarUrl      String?            @map("avatar_url")
+  language       String             @default("en")
+  createdAt      DateTime           @default(now()) @map("created_at")
+  updatedAt      DateTime           @default(now()) @updatedAt @map("updated_at")
+  trips          Trip[]
+  savedCities    SavedDestination[]
 
   @@map("users")
 }
 
 model City {
-  id              String             @id @default(uuid())
+  id              String   @id @default(uuid())
   name            String
   country         String
   region          String?
-  costIndex       Decimal?           @map("cost_index") @db.Decimal(5, 2)
-  popularityScore Int                @default(0) @map("popularity_score")
-  coverPhotoUrl   String?            @map("cover_photo_url")
-  stops           Stop[]
-  activities      Activity[]
-  savedByUsers    SavedDestination[]
+  costIndex       Decimal? @map("cost_index") @db.Decimal(5, 2)
+  popularityScore Int      @default(0) @map("popularity_score")
+  coverPhotoUrl   String?  @map("cover_photo_url")
+
+  activities   Activity[]
+  savedByUsers SavedDestination[]
+  stops        Stop[]
 
   @@map("cities")
 }
@@ -53,28 +55,33 @@ model Trip {
   shareToken    String?       @unique @map("share_token")
   isPublic      Boolean       @default(false) @map("is_public")
   createdAt     DateTime      @default(now()) @map("created_at")
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  stops         Stop[]
-  packingItems  PackingItem[]
-  notes         Note[]
+  updatedAt     DateTime      @default(now()) @updatedAt @map("updated_at")
   budgetEntries BudgetEntry[]
+  noteItems     Note[]
+  packingItems  PackingItem[]
+  stops         Stop[]
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("trips")
 }
 
 model Stop {
-  id             String         @id @default(uuid())
-  tripId         String         @map("trip_id")
-  cityId         String         @map("city_id")
-  sortOrder      Int            @map("sort_order")
-  arriveDate     DateTime?      @map("arrive_date") @db.Date
-  departDate     DateTime?      @map("depart_date") @db.Date
-  createdAt      DateTime       @default(now()) @map("created_at")
-  trip           Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  city           City           @relation(fields: [cityId], references: [id])
-  stopActivities StopActivity[]
-  notes          Note[]
-  budgetEntries  BudgetEntry[]
+  id              String         @id @default(uuid())
+  tripId          String         @map("trip_id")
+  cityId          String?        @map("city_id")
+  sortOrder       Int            @map("sort_order")
+  arriveDate      DateTime?      @map("arrive_date") @db.Date
+  departDate      DateTime?      @map("depart_date") @db.Date
+  createdAt       DateTime       @default(now()) @map("created_at")
+  cityName        String         @map("city_name")
+  country         String?
+  estimatedBudget Decimal?       @map("estimated_budget") @db.Decimal(10, 2)
+  updatedAt       DateTime       @default(now()) @updatedAt @map("updated_at")
+  budgetEntries   BudgetEntry[]
+  noteItems       Note[]
+  stopActivities  StopActivity[]
+  city            City?          @relation(fields: [cityId], references: [id])
+  trip            Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@unique([tripId, sortOrder])
   @@map("stops")
@@ -100,10 +107,10 @@ model StopActivity {
   stopId        String    @map("stop_id")
   activityId    String    @map("activity_id")
   scheduledDate DateTime? @map("scheduled_date") @db.Date
-  scheduledTime DateTime? @map("scheduled_time") @db.Time
+  scheduledTime DateTime? @map("scheduled_time") @db.Time(6)
   costOverride  Decimal?  @map("cost_override") @db.Decimal(8, 2)
-  stop          Stop      @relation(fields: [stopId], references: [id], onDelete: Cascade)
   activity      Activity  @relation(fields: [activityId], references: [id])
+  stop          Stop      @relation(fields: [stopId], references: [id], onDelete: Cascade)
 
   @@unique([stopId, activityId])
   @@map("stop_activities")
@@ -128,8 +135,8 @@ model Note {
   body      String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
   stop      Stop?    @relation(fields: [stopId], references: [id], onDelete: Cascade)
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
   @@map("notes")
 }
@@ -142,8 +149,8 @@ model BudgetEntry {
   label      String
   amount     Decimal  @db.Decimal(10, 2)
   recordedAt DateTime @default(now()) @map("recorded_at")
+  stop       Stop?    @relation(fields: [stopId], references: [id])
   trip       Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  stop       Stop?    @relation(fields: [stopId], references: [id], onDelete: SetNull)
 
   @@map("budget_entries")
 }
@@ -153,8 +160,8 @@ model SavedDestination {
   userId  String   @map("user_id")
   cityId  String   @map("city_id")
   savedAt DateTime @default(now()) @map("saved_at")
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   city    City     @relation(fields: [cityId], references: [id])
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, cityId])
   @@map("saved_destinations")
