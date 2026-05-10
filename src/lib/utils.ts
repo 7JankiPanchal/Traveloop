@@ -13,3 +13,11 @@ export function formatDate(iso: string | Date | null): string {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
+
+/** 
+ * Recursively converts Prisma Decimals to numbers for Client Component serialization.
+ * Also ensures dates are serialized if needed, though Next.js handles simple Dates.
+ */
+export function serialize<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data))
+}

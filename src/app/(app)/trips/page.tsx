@@ -4,7 +4,7 @@ import { createTripAction } from '@/actions/trip/createTrip'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { TripCard } from '@/components/trips/TripCard'
-import { formatDate } from '@/lib/utils'
+import { formatDate, serialize } from '@/lib/utils'
 
 export default async function TripsDashboard() {
   const user = await getCurrentUser()
@@ -17,13 +17,15 @@ export default async function TripsDashboard() {
     )
   }
 
-  const trips = await prisma.trip.findMany({
+  const rawTrips = await prisma.trip.findMany({
     where: { userId: user.id },
     orderBy: { createdAt: 'desc' },
     include: {
       stops: true,
     },
   })
+
+  const trips = serialize(rawTrips)
 
   return (
     <div className="space-y-8">
