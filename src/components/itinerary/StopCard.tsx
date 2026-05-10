@@ -6,6 +6,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { deleteStop } from '@/actions/stop/deleteStop'
 import { ActivityCard } from './ActivityCard'
 import { ActivityForm } from './ActivityForm'
+import { ActivitySearchModal } from './ActivitySearchModal'
 import { StopForm } from './StopForm'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -122,13 +123,12 @@ export function StopCard({ stop, tripId, index }: StopCardProps) {
 
           {/* Add activity */}
           {showActivityForm ? (
-            <div className="p-4 border-t border-white/5">
-              <ActivityForm
-                tripId={tripId}
-                stopId={stop.id}
-                onSuccess={() => setShowActivityForm(false)}
-              />
-            </div>
+            <ActivitySearchModal
+              tripId={tripId}
+              stopId={stop.id}
+              cityId={stop.cityId}
+              onClose={() => setShowActivityForm(false)}
+            />
           ) : (
             <div className="p-4">
               <Button variant="ghost" size="sm" onClick={() => setShowActivityForm(true)}>

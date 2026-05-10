@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import { createTripAction } from '@/actions/trip/createTrip'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { TripCard } from '@/components/trips/TripCard'
 import { formatDate } from '@/lib/utils'
 
 export default async function TripsDashboard() {
@@ -52,24 +53,7 @@ export default async function TripsDashboard() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {trips.map(trip => (
-            <a 
-              key={trip.id} 
-              href={`/trips/${trip.id}/builder`}
-              className="group block rounded-2xl bg-[#1a1d2e] border border-white/5 p-5 hover:border-orange-500/50 transition-colors"
-            >
-              <h3 className="font-semibold text-lg text-white group-hover:text-orange-400 transition-colors">
-                {trip.title}
-              </h3>
-              {trip.description && <p className="text-sm text-slate-400 mt-1">{trip.description}</p>}
-              
-              <div className="flex items-center gap-4 mt-4 text-xs font-medium text-slate-500">
-                <span>{trip.stops.length} stops</span>
-                {trip.startDate && <span>{formatDate(trip.startDate)}</span>}
-                <span className="ml-auto text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                  Open Builder →
-                </span>
-              </div>
-            </a>
+            <TripCard key={trip.id} trip={trip} />
           ))}
         </div>
       )}

@@ -15,4 +15,5 @@ This directory contains the split parts of the Traveloop Implementation Report, 
 9.  **[Tech Stack](09_tech_stack.md)** - Recommended technologies and tools.
 
 ---
-*Generated for the Traveloop Development Team.*
+
+_Generated for the Traveloop Development Team._
