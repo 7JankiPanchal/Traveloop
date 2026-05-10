@@ -8,6 +8,7 @@ import { updateStop } from '@/actions/stop/updateStop'
 import { createStopSchema } from '@/lib/validations/stopSchema'
 import type { CreateStopInput } from '@/lib/validations/stopSchema'
 import { Button } from '@/components/ui/Button'
+import { CitySearchInput } from '@/components/city-search/CitySearchInput'
 import type { StopWithActivities } from '@/types/itinerary'
 
 interface StopFormProps {
@@ -20,7 +21,7 @@ export function StopForm({ tripId, existingStop, onSuccess }: StopFormProps) {
   const [isPending, startTransition] = useTransition()
   const isEdit = Boolean(existingStop)
 
-  const { register, handleSubmit, formState: { errors } } = useForm<CreateStopInput>({
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<CreateStopInput>({
     resolver: zodResolver(createStopSchema),
     defaultValues: existingStop
       ? {
@@ -50,6 +51,16 @@ export function StopForm({ tripId, existingStop, onSuccess }: StopFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="mb-2">
+        <label className={labelClass}>Search City (Auto-fill)</label>
+        <CitySearchInput 
+          placeholder="Type to search and auto-fill..."
+          onSelect={(city) => {
+            setValue('cityName', city.name, { shouldValidate: true })
+            setValue('country', city.country ?? '', { shouldValidate: true })
+          }} 
+        />
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClass}>City *</label>

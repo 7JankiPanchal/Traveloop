@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useDebounce } from './useDebounce'
 import type { CityResult } from '@/types/city'
+import { searchCitiesAction } from '@/actions/search/searchCitiesAction'
 
 export function useCitySearch() {
   const [query, setQuery] = useState('')
@@ -18,8 +19,7 @@ export function useCitySearch() {
     }
     setIsLoading(true)
     setError(null)
-    fetch(`/api/cities/search?q=${encodeURIComponent(debouncedQuery)}&t=${Date.now()}`)
-      .then((r) => r.json())
+    searchCitiesAction(debouncedQuery)
       .then((data: CityResult[]) => setResults(data))
       .catch(() => setError('City search failed. Please try again.'))
       .finally(() => setIsLoading(false))

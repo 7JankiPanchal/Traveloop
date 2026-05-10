@@ -34,9 +34,16 @@ export default async function ViewPage({ params }: ViewPageProps) {
             {trip.startDate && ` · ${formatDate(trip.startDate)} → ${formatDate(trip.endDate)}`}
           </p>
         </div>
-        <a href={`/trips/${tripId}/builder`}>
-          <Button variant="secondary" size="sm">← Edit Builder</Button>
-        </a>
+        <div className="flex items-center gap-2">
+          <a href={`/trips/${tripId}/notes`}>
+            <Button variant="secondary" size="sm" className="bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20">
+              📔 Journal
+            </Button>
+          </a>
+          <a href={`/trips/${tripId}/builder`}>
+            <Button variant="secondary" size="sm">← Edit Builder</Button>
+          </a>
+        </div>
       </div>
 
       {/* Cost breakdown */}

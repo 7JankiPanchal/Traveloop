@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useDebounce } from './useDebounce'
 import type { Activity } from '@/lib/generated/prisma/client'
+import { searchActivitiesAction } from '@/actions/search/searchActivitiesAction'
 
 export function useActivitySearch() {
   const [query, setQuery] = useState('')
@@ -12,8 +13,7 @@ export function useActivitySearch() {
 
   useEffect(() => {
     setIsLoading(true)
-    fetch(`/api/activities/search?q=${encodeURIComponent(debouncedQuery)}`)
-      .then((r) => r.json())
+    searchActivitiesAction(debouncedQuery)
       .then((data: Activity[]) => setResults(data))
       .catch(() => setResults([]))
       .finally(() => setIsLoading(false))
