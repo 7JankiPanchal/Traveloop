@@ -1,31 +1,44 @@
 import type { Metadata } from 'next'
 import { getCurrentUser } from '@/lib/auth/getCurrentUser'
-import { AppNavbar } from '@/components/layout/AppNavbar'
+import { LogoutButton } from '@/components/auth/LogoutButton'
 
 export const metadata: Metadata = {
-  title: 'Traveloop — Personalized Travel Planning',
-  description:
-    'Plan your perfect multi-city trip with itinerary builder, budget tracker, packing lists, and community sharing.',
+  title: 'Traveloop',
+  description: 'Plan your perfect multi-city trip',
 }
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
 
-  const navUser = user
-    ? {
-      id: user.id,
-      firstName: user.firstName ?? null,
-      email: user.email,
-      avatarUrl: user.avatarUrl ?? null,
-    }
-    : null
-
   return (
-    <div style={{ minHeight: '100vh', background: '#0f1117', color: '#f1f5f9' }}>
-      {navUser && <AppNavbar user={navUser} />}
-      <main style={{ paddingTop: navUser ? 56 : 0, minHeight: '100vh' }}>
-        {children}
-      </main>
+    <div className="min-h-screen bg-[#0f1117] text-white">
+      <nav className="border-b border-white/5 px-6 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-6">
+          <a href="/" className="text-xl font-bold text-orange-500 tracking-tight">Traveloop</a>
+          <div className="flex items-center gap-4 text-sm text-slate-400">
+            <a href="/trips" className="hover:text-white transition-colors">My Trips</a>
+            <a href="/search" className="hover:text-white transition-colors">Discover</a>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          {user && (
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col items-end">
+                <span className="text-sm font-medium text-white">Hi, {user.name}</span>
+                <LogoutButton />
+              </div>
+              {user.avatarUrl && (
+                <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-white/5">
+                  <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </nav>
+      <main className="max-w-4xl mx-auto px-6 py-8">{children}</main>
     </div>
   )
 }
+

@@ -3,15 +3,6 @@ import { verifyToken } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import type { AuthUser } from '@/types/auth'
 
-/** Emails listed here get admin access. Set ADMIN_EMAILS in .env as a comma-separated list. */
-function isAdminEmail(email: string): boolean {
-  const adminEmails = (process.env.ADMIN_EMAILS ?? '')
-    .split(',')
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean)
-  return adminEmails.includes(email.toLowerCase())
-}
-
 // ─── Internal token reader ─────────────────────────────────────────
 async function resolveUserFromToken(): Promise<AuthUser | null> {
   const cookieStore = await cookies()
@@ -23,9 +14,7 @@ async function resolveUserFromToken(): Promise<AuthUser | null> {
         id: 'dev-user-00000000-0000-0000-0000-000000000000',
         email: 'dev@traveloop.app',
         name: 'Dev User',
-        firstName: 'Dev',
-        avatarUrl: null,
-        isAdmin: true, // dev bypass gets admin
+        avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dev',
       }
     }
     return null
@@ -34,20 +23,19 @@ async function resolveUserFromToken(): Promise<AuthUser | null> {
   const payload = await verifyToken(token)
   if (!payload || !payload.userId) return null
 
+  // Fetch from DB to get the latest avatarUrl and name
   const user = await prisma.user.findUnique({
     where: { id: payload.userId as string },
-    select: { id: true, email: true, firstName: true, lastName: true, avatarUrl: true },
+    select: { id: true, email: true, firstName: true, lastName: true, avatarUrl: true }
   })
 
   if (!user) return null
 
-  return {
-    id: user.id,
-    email: user.email,
-    firstName: user.firstName ?? null,
+  return { 
+    id: user.id, 
+    email: user.email, 
     name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User',
-    avatarUrl: user.avatarUrl ?? null,
-    isAdmin: isAdminEmail(user.email),
+    avatarUrl: user.avatarUrl || undefined
   }
 }
 
@@ -67,3 +55,4 @@ export async function requireUser(): Promise<AuthUser> {
   }
   return user
 }
+

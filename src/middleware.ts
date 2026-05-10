@@ -1,32 +1,22 @@
 import { NextResponse, NextRequest } from 'next/server'
 
-// Routes that require authentication
-const PROTECTED_PREFIXES = [
-  '/trips',
-  '/search',
-  '/profile',
-  '/community',
-  '/admin',
-]
-
-// Auth routes — redirect to app if already authenticated
-const AUTH_ROUTES = ['/login', '/signup']
-
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value
   const { pathname } = request.nextUrl
 
-  const isProtected = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
-  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route))
+  // Protected routes: anything under /trips or /profile, or the (app) group routes
+  // For now, let's protect /trips
+  const isProtectedRoute = pathname.startsWith('/trips')
 
-  // Unauthenticated user trying to access a protected page
-  if (isProtected && !token) {
+  // Auth routes: login and signup
+  const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/signup')
+
+  if (isProtectedRoute && !token) {
     const url = new URL('/login', request.url)
     url.searchParams.set('callbackUrl', pathname)
     return NextResponse.redirect(url)
   }
 
-  // Authenticated user trying to access login/signup
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL('/trips', request.url))
   }
@@ -35,14 +25,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/trips/:path*',
-    '/search/:path*',
-    '/profile/:path*',
-    '/community/:path*',
-    '/communityTab/:path*',
-    '/admin/:path*',
-    '/login',
-    '/signup',
-  ],
+  matcher: ['/trips/:path*', '/login', '/signup'],
 }

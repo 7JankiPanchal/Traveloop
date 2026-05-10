@@ -1,231 +1,138 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { X, Image, MapPin, Send } from 'lucide-react'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { X, Image as ImageIcon, MapPin, Send } from 'lucide-react'
+import { createCommunityPost } from '@/actions/community/createPost'
 
 interface CreatePostModalProps {
+  isOpen: boolean
   onClose: () => void
-  onSubmit: (data: { content: string; location: string; imageUrl: string }) => void
 }
 
-export function CreatePostModal({ onClose, onSubmit }: CreatePostModalProps) {
+export function CreatePostModal({ isOpen, onClose }: CreatePostModalProps) {
   const [content, setContent] = useState('')
   const [location, setLocation] = useState('')
   const [imageUrl, setImageUrl] = useState('')
-  const [showImageInput, setShowImageInput] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!content.trim()) return
-    setSubmitting(true)
-    await onSubmit({ content: content.trim(), location: location.trim(), imageUrl: imageUrl.trim() })
-    setSubmitting(false)
-    onClose()
+    setIsSubmitting(true)
+    try {
+      const formData = new FormData()
+      formData.append('content', content)
+      formData.append('location', location)
+      formData.append('imageUrl', imageUrl)
+      
+      await createCommunityPost(formData)
+      onClose()
+      setContent('')
+      setLocation('')
+      setImageUrl('')
+    } catch (error) {
+      // Handle error silently or through UI notifications if needed
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Share a travel moment"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 16,
-        background: 'rgba(0,0,0,0.7)',
-        backdropFilter: 'blur(4px)',
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 480,
-          background: '#111827',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: 20,
-          overflow: 'hidden',
-          boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
-        }}
-      >
-        {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px 20px',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
-          }}
-        >
-          <h2 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#f1f5f9' }}>
-            Share a Moment ✈️
-          </h2>
-          <button
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onClose}
-            aria-label="Close modal"
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: 'none',
-              borderRadius: 8,
-              cursor: 'pointer',
-              color: '#94a3b8',
-              padding: 6,
-              display: 'flex',
-            }}
-          >
-            <X size={16} />
-          </button>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} style={{ padding: 20 }}>
-          <textarea
-            ref={textareaRef}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="What's your travel story today?"
-            required
-            maxLength={500}
-            rows={4}
-            style={{
-              width: '100%',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 12,
-              padding: '12px 14px',
-              color: '#f1f5f9',
-              fontSize: 14,
-              lineHeight: 1.6,
-              resize: 'vertical',
-              outline: 'none',
-              boxSizing: 'border-box',
-              fontFamily: 'inherit',
-            }}
+            className="fixed inset-0 z-[60] bg-[#1c1c19]/40 backdrop-blur-md"
           />
-          <p style={{ margin: '4px 0 12px', fontSize: 11, color: '#475569', textAlign: 'right' }}>
-            {content.length}/500
-          </p>
 
-          {/* Location */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 10,
-              padding: '8px 12px',
-              marginBottom: 10,
-            }}
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-full max-w-md p-4"
           >
-            <MapPin size={14} color="#f97316" />
-            <input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Add location (optional)"
-              maxLength={100}
-              style={{
-                flex: 1,
-                background: 'none',
-                border: 'none',
-                outline: 'none',
-                color: '#f1f5f9',
-                fontSize: 13,
-                fontFamily: 'inherit',
-              }}
-            />
-          </div>
+            <div className="bg-[#fdf9f4] border border-[#dfc0b7] rounded-3xl overflow-hidden shadow-2xl">
+              <div className="p-6 space-y-5">
+                <div className="flex justify-between items-center">
+                  <div className="space-y-0.5">
+                    <h2 className="text-lg font-bold text-[#1c1c19]">Share a Moment</h2>
+                    <p className="text-[10px] text-[#8c7b72] font-medium uppercase tracking-widest">Post to community</p>
+                  </div>
+                  <button 
+                    onClick={onClose} 
+                    className="p-1.5 bg-white border border-[#f0e8e4] rounded-lg text-[#8c7b72] hover:text-[#a43716] transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
 
-          {/* Image URL Toggle */}
-          {showImageInput && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 10,
-                padding: '8px 12px',
-                marginBottom: 10,
-              }}
-            >
-              <Image size={14} color="#f97316" />
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="Image URL (optional)"
-                style={{
-                  flex: 1,
-                  background: 'none',
-                  border: 'none',
-                  outline: 'none',
-                  color: '#f1f5f9',
-                  fontSize: 13,
-                  fontFamily: 'inherit',
-                }}
-              />
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-[#a43716] uppercase tracking-[0.2em] ml-1">Your Story</label>
+                    <textarea
+                      placeholder="Where have you been? What did you find?"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      className="w-full h-24 p-3 rounded-xl bg-white border border-[#f0e8e4] text-[#1c1c19] placeholder-[#8c7b72]/50 focus:border-[#a43716] outline-none resize-none font-medium text-sm transition-all shadow-inner"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-[#a43716] uppercase tracking-[0.2em] ml-1">Location</label>
+                      <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a43716] w-3.5 h-3.5" />
+                        <input
+                          type="text"
+                          placeholder="Paris, France"
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-[#f0e8e4] text-[#1c1c19] placeholder-[#8c7b72]/50 focus:border-[#a43716] outline-none text-xs font-bold transition-all shadow-inner"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-[#a43716] uppercase tracking-[0.2em] ml-1">Image Link</label>
+                      <div className="relative">
+                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a43716] w-3.5 h-3.5" />
+                        <input
+                          type="text"
+                          placeholder="https://..."
+                          value={imageUrl}
+                          onChange={(e) => setImageUrl(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-[#f0e8e4] text-[#1c1c19] placeholder-[#8c7b72]/50 focus:border-[#a43716] outline-none text-xs font-bold transition-all shadow-inner"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3.5 rounded-xl bg-[#a43716] text-white font-black flex items-center justify-center gap-2 hover:bg-[#8c2e12] active:scale-[0.98] transition-all disabled:opacity-50 shadow-lg shadow-[#a43716]/10 uppercase tracking-widest text-xs mt-2"
+                  >
+                    {isSubmitting ? (
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <span>Share with the world</span>
+                        <Send size={14} />
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
             </div>
-          )}
-
-          {/* Footer */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 16 }}>
-            <button
-              type="button"
-              onClick={() => setShowImageInput((v) => !v)}
-              style={{
-                background: 'none',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 8,
-                padding: '6px 12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                color: '#64748b',
-                fontSize: 12,
-                cursor: 'pointer',
-              }}
-            >
-              <Image size={14} />
-              {showImageInput ? 'Remove Image' : 'Add Image'}
-            </button>
-
-            <button
-              type="submit"
-              disabled={!content.trim() || submitting}
-              style={{
-                background: content.trim() ? '#f97316' : 'rgba(255,255,255,0.05)',
-                color: content.trim() ? '#fff' : '#475569',
-                border: 'none',
-                borderRadius: 10,
-                padding: '8px 20px',
-                fontWeight: 600,
-                fontSize: 13,
-                cursor: content.trim() ? 'pointer' : 'not-allowed',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                transition: 'background 0.15s',
-              }}
-            >
-              <Send size={14} />
-              {submitting ? 'Posting…' : 'Post'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   )
 }

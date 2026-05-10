@@ -1,50 +1,33 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
-import { getCurrentUser } from '@/lib/auth/getCurrentUser'
 import prisma from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/auth/getCurrentUser'
+import { revalidatePath } from 'next/cache'
 
-interface CreatePostInput {
-  content: string
-  location?: string
-  imageUrl?: string
-}
-
-export async function createPost(input: CreatePostInput) {
+export async function createCommunityPost(formData: FormData) {
   const user = await getCurrentUser()
+  if (!user) throw new Error('Unauthorized')
 
-  if (!user) {
-    return { success: false, error: 'You must be signed in to post.' }
-  }
+  const content = formData.get('content') as string
+  const location = formData.get('location') as string
+  const imageUrl = formData.get('imageUrl') as string
 
-  const content = input.content?.trim()
-  if (!content || content.length > 500) {
-    return { success: false, error: 'Post content must be between 1 and 500 characters.' }
-  }
+  if (!content) throw new Error('Content is required')
 
-  // Validate imageUrl is a proper URL if provided
-  if (input.imageUrl) {
-    try {
-      const url = new URL(input.imageUrl)
-      if (!['http:', 'https:'].includes(url.protocol)) {
-        return { success: false, error: 'Image URL must use http or https.' }
+  try {
+    await prisma.communityPost.create({
+      data: {
+        content,
+        location: location || null,
+        imageUrl: imageUrl || null,
+        userId: user.id
       }
-    } catch {
-      return { success: false, error: 'Invalid image URL.' }
-    }
+    })
+    
+    revalidatePath('/community')
+    return { success: true }
+  } catch (error) {
+    console.error('Failed to create post:', error)
+    return { success: false, error: 'Failed to create post' }
   }
-
-  await prisma.communityPost.create({
-    data: {
-      userId: user.id,
-      content,
-      location: input.location?.trim() || null,
-      imageUrl: input.imageUrl?.trim() || null,
-    },
-  })
-
-  revalidatePath('/communityTab')
-  revalidatePath('/(app)/community')
-
-  return { success: true }
 }
