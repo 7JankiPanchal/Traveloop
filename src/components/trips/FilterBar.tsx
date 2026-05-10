@@ -4,7 +4,7 @@ import { Search, Filter, Layers, ListFilter } from 'lucide-react'
 
 export function FilterBar() {
   return (
-    <div className="flex flex-col md:flex-row gap-4 items-center">
+    <div suppressHydrationWarning className="flex flex-col md:flex-row gap-4 items-center">
       {/* Search Input */}
       <div className="relative flex-1 group w-full">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-orange-500 transition-colors" />
